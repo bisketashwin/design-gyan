@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "design-gyan"
+  },
+  "targets": {
+    "design-gyan": {
+      "hosting": {
+        "temp-site": [
+          "design-gyan-2342342"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -14,6 +14,7 @@
 .vscode/
 .project
 .metadata
+.agents
 
 # Flutter/Dart/Pub related
 # Object files
@@ -38,3 +39,5 @@ android/key.properties
 '@ | Out-File -FilePath .gitignore -Encoding utf-8
 
 utils/**/*.txt
+skills-lock.json
+.firebase
