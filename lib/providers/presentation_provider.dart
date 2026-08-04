@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/slide_data.dart';
 import '../commons/values.dart';
@@ -35,38 +36,27 @@ class PresentationNotifier extends Notifier<PresentationState> {
   }
 
   void nextStep() {
-    // If it's a full-media slide, skip stepping and change slides directly
     if (state.currentSlide?.type == SlideType.fullMedia) {
       nextSlideDirect();
       return;
     }
-
     if (state.visibleStepCount < state.totalStepCount) {
       state = state.copyWith(visibleStepCount: state.visibleStepCount + 1);
     } else if (state.currentSlideIndex < state.slides.length - 1) {
-      state = state.copyWith(
-        currentSlideIndex: state.currentSlideIndex + 1,
-        visibleStepCount: 0,
-      );
+      // Route through _setCurrentSlideIndex instead of inline copyWith
+      _setCurrentSlideIndex(state.currentSlideIndex + 1);
     }
   }
 
   void previousStep() {
-    // If it's a full-media slide, skip stepping and change slides directly
     if (state.currentSlide?.type == SlideType.fullMedia) {
       previousSlideDirect();
       return;
     }
-
-    if (state.visibleStepCount > 0) {
+    if (state.visibleStepCount > 1) {
       state = state.copyWith(visibleStepCount: state.visibleStepCount - 1);
     } else if (state.currentSlideIndex > 0) {
-      final prevIndex = state.currentSlideIndex - 1;
-      final prevState = state.copyWith(currentSlideIndex: prevIndex);
-      state = state.copyWith(
-        currentSlideIndex: prevIndex,
-        visibleStepCount: prevState.totalStepCount,
-      );
+      _setCurrentSlideIndex(state.currentSlideIndex - 1);
     }
   }
 
@@ -82,24 +72,45 @@ class PresentationNotifier extends Notifier<PresentationState> {
   }
 
   void goToSlide(int index) {
-    if (index >= 0 && index < state.slides.length) {
-      state = state.copyWith(
-        currentSlideIndex: index,
-        visibleStepCount: 0,
-      );
-    }
+    _setCurrentSlideIndex(index);
   }
 
   void nextSlideDirect() {
     if (state.currentSlideIndex < state.slides.length - 1) {
-      goToSlide(state.currentSlideIndex + 1);
+      _setCurrentSlideIndex(state.currentSlideIndex + 1);
     }
   }
 
   void previousSlideDirect() {
     if (state.currentSlideIndex > 0) {
-      goToSlide(state.currentSlideIndex - 1);
+      _setCurrentSlideIndex(state.currentSlideIndex - 1);
     }
+  }
+
+  void _setCurrentSlideIndex(int newIndex) {
+    if (newIndex >= 0 && newIndex < state.slides.length) {
+      state = state.copyWith(
+        currentSlideIndex: newIndex,
+        visibleStepCount: 0, // Reset to 0 so entrance animation can play
+      );
+      onSlideEnter();
+    }
+  }
+
+  void onSlideEnter() {
+    final slide = state.currentSlide;
+    if (slide == null) return;
+
+    // 1. Only auto-reveal step 1 if it's a standard slide with steps to show
+    if (slide.type == SlideType.standard && state.totalStepCount > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (state.visibleStepCount == 0) {
+          state = state.copyWith(visibleStepCount: 1);
+        }
+      }); 
+    }
+
+    // Play audio or execute slide actions cleanly for ALL slides
   }
 
   void handleKeyEvent(KeyEvent event) {

@@ -3,25 +3,29 @@
 <!-- align: bottom-right -->
 <!-- fit: cover -->
 ![80s the Golden Age of Arcade Games](assets/images/arcade_games.jpg)
-
+<!-- 
 ## The Era of Innovation
 > Hardware evolved rapidly from vector graphics to raster displays.
 
 * Pac-Man, Space Invaders, and Donkey Kong defined the arcade standard.
 * Revenue peaked as arcades became community gathering points.
+-->
 
 ---
 
-# Early Home Video Games
+<!-- # Early Home Video Games -->
+# Pong game, played on console in 1970s
 <!-- type: full-media -->
-<!-- align: middle-left -->
+<!-- align: top-right -->
 <!-- fit: contain -->
 ![Pong game, played on console in 1970s](https://www.youtube.com/watch?v=BNqA7MTDUY8)
 
+<!-- 
 ## 1970s Pioneers
 > Simple mechanics, massive cultural impact.
 
-* Built using specialized logic circuits before general CPUs took over.
+* Built using specialized logic circuits before general CPUs took over. 
+-->
 
 
 ---

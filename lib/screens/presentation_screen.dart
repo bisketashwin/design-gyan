@@ -63,11 +63,13 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
             children: [
               if (slide.type == SlideType.fullMedia)
                 FullMediaSlideView(
+                  key: ValueKey('media_${state.currentSlideIndex}'),
                   slide: slide,
                   visibleStepCount: state.visibleStepCount,
                 )
               else
                 StandardSlideView(
+                  key: ValueKey('standard_${state.currentSlideIndex}'),
                   slide: slide,
                   visibleStepCount: state.visibleStepCount,
                   visibleListItems: visibleListItems,
