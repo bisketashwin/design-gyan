@@ -1,8 +1,7 @@
-// lib/providers/presentation_provider.dart
-
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/slide_data.dart';
+import '../commons/values.dart';
 import 'presentation_state.dart';
 
 final presentationProvider =
@@ -36,6 +35,12 @@ class PresentationNotifier extends Notifier<PresentationState> {
   }
 
   void nextStep() {
+    // If it's a full-media slide, skip stepping and change slides directly
+    if (state.currentSlide?.type == SlideType.fullMedia) {
+      nextSlideDirect();
+      return;
+    }
+
     if (state.visibleStepCount < state.totalStepCount) {
       state = state.copyWith(visibleStepCount: state.visibleStepCount + 1);
     } else if (state.currentSlideIndex < state.slides.length - 1) {
@@ -47,6 +52,12 @@ class PresentationNotifier extends Notifier<PresentationState> {
   }
 
   void previousStep() {
+    // If it's a full-media slide, skip stepping and change slides directly
+    if (state.currentSlide?.type == SlideType.fullMedia) {
+      previousSlideDirect();
+      return;
+    }
+
     if (state.visibleStepCount > 0) {
       state = state.copyWith(visibleStepCount: state.visibleStepCount - 1);
     } else if (state.currentSlideIndex > 0) {
@@ -91,24 +102,20 @@ class PresentationNotifier extends Notifier<PresentationState> {
     }
   }
 
-  // Modern Flutter 3.18+ KeyEvent implementation
   void handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
       final key = event.logicalKey;
       final isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
-
       if ((isShiftPressed && key == LogicalKeyboardKey.arrowRight) ||
           key == LogicalKeyboardKey.pageDown) {
         nextSlideDirect();
         return;
       }
-
       if ((isShiftPressed && key == LogicalKeyboardKey.arrowLeft) ||
           key == LogicalKeyboardKey.pageUp) {
         previousSlideDirect();
         return;
       }
-
       if (key == LogicalKeyboardKey.arrowRight ||
           key == LogicalKeyboardKey.space) {
         nextStep();
