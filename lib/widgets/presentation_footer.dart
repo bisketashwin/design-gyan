@@ -55,11 +55,11 @@ class PresentationFooter extends StatelessWidget {
                 cursor: SystemMouseCursors.click,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  width: isSelected ? 26 : 10,
-                  height: 10,
+                  width: isSelected ? 46 : 20,
+                  height: 20,
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(10),
                     color: isSelected
                         ? const Color(0xFFFFB800)
                         : Colors.white24,
