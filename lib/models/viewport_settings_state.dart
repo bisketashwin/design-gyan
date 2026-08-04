@@ -67,6 +67,8 @@ class ViewportSettingsState {
     );
   }
 
+  double get baseValueMediaScale => mediaScale;
+
   ViewportSettingsState copyWith({
     double? unifiedZoom,
     double? textScale,

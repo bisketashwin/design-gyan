@@ -1,5 +1,5 @@
 import 'package:design_gyan/providers/viewport_setting_provider.dart';
-import 'package:design_gyan/widgets/viewport_settings_dialog.dart';
+import 'package:design_gyan/widgets/view_port_settings_dialogue/viewport_settings_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
