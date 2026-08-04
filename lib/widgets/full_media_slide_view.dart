@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:design_gyan/commons/helpers.dart';
 import 'package:design_gyan/commons/values.dart';
+import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:design_gyan/widgets/floating_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,6 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import '../models/slide_data.dart';
 import '../providers/presentation_provider.dart';
-
 
 class FullMediaSlideView extends ConsumerStatefulWidget {
   final SlideData slide;
@@ -55,7 +55,6 @@ class _FullMediaSlideViewState extends ConsumerState<FullMediaSlideView> {
             showFullscreenButton: false,
           ),
         );
-
         _playerStateSubscription =
             _youtubeController!.stream.listen((event) {
           if (event.playerState == PlayerState.ended) {
@@ -81,18 +80,31 @@ class _FullMediaSlideViewState extends ConsumerState<FullMediaSlideView> {
 
   @override
   Widget build(BuildContext context) {
+    final viewport = ref.watch(viewportSettingsProvider);
     final media = widget.slide.media;
+
+    final baseWidth = MediaQuery.of(context).size.width * 0.88;
+    final baseHeight = MediaQuery.of(context).size.height * 0.85;
+
+    final scaledWidth = (baseWidth * viewport.mediaScale).clamp(
+      300.0,
+      MediaQuery.of(context).size.width,
+    );
+    final scaledHeight = (baseHeight * viewport.mediaScale).clamp(
+      200.0,
+      MediaQuery.of(context).size.height,
+    );
 
     return Stack(
       children: [
         const BackgroundGradient(),
         Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.88,
-            height: MediaQuery.of(context).size.height * 0.85,
+            width: scaledWidth,
+            height: scaledHeight,
             decoration: BoxDecoration(
               color: Colors.black,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16 * viewport.unifiedZoom),
               border: Border.all(color: Colors.white12),
               boxShadow: const [
                 BoxShadow(
@@ -116,8 +128,10 @@ class _FullMediaSlideViewState extends ConsumerState<FullMediaSlideView> {
         ),
         Positioned.fill(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 80.0, vertical: 60.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: 80.0 * viewport.unifiedZoom,
+              vertical: 60.0 * viewport.unifiedZoom,
+            ),
             child: Align(
               alignment:
                   getAlignment(media?.alignment ?? CardAlignment.bottomRight),

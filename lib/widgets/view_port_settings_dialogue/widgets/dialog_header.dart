@@ -1,9 +1,11 @@
-
-  import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:design_gyan/widgets/view_port_settings_dialogue/dialogue_theme.dart';
 import 'package:flutter/material.dart';
 
-Widget buildHeader(BuildContext context, ViewportSettingsNotifier notifier) {
+class DialogHeader extends StatelessWidget {
+  const DialogHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -27,3 +29,4 @@ Widget buildHeader(BuildContext context, ViewportSettingsNotifier notifier) {
       ],
     );
   }
+}

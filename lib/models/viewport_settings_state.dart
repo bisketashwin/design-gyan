@@ -91,4 +91,10 @@ class ViewportSettingsState {
       savedPresets: savedPresets ?? this.savedPresets,
     );
   }
+
+  String get formattedZoom => "${(unifiedZoom * 100).round()}%";
+  String get formattedTextScale => "${textScale.toStringAsFixed(2)}x";
+  String get formattedMediaScale => "${mediaScale.toStringAsFixed(2)}x";
+  String get formattedLineHeight => lineHeight.toStringAsFixed(2);
+  String get formattedLetterSpacing => "${letterSpacing.toStringAsFixed(1)}px";
 }

@@ -70,6 +70,19 @@ class ViewportSettingsNotifier extends Notifier<ViewportSettingsState> {
     );
   }
 
+  String formatPresetLabel(String key) {
+    if (key == 'default') return 'Default';
+    if (key.startsWith('preset_')) {
+      final timestampStr = key.replaceFirst('preset_', '');
+      final timestamp = int.tryParse(timestampStr);
+      if (timestamp != null) {
+        final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+        return 'Preset ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+      }
+    }
+    return key;
+  }
+
   // --- Slider Value Handlers (Clear active preset focus on tweak) ---
   void _updateStateWithSliderDelta(ViewportSettingsState newState) {
     // If tweaking away from active preset, unset active preset key
@@ -192,29 +205,66 @@ class ViewportSettingsNotifier extends Notifier<ViewportSettingsState> {
     );
   }
 
+  ViewportSettingsState get activeBaseComparison {
+  if (state.activePresetKey != null &&
+      state.savedPresets.containsKey(state.activePresetKey)) {
+    return state.savedPresets[state.activePresetKey]!;
+  }
+  return state.savedPresets['default'] ?? ViewportSettingsState.factoryDefaults;
+}
+
+/// Computes whether current UI settings differ from the active baseline.
+bool get isDirty => state.hasDeltaFrom(activeBaseComparison);
+
   // --- Create New Preset ---
   Future<void> saveNewPreset() async {
-    final userPresets = Map<String, ViewportSettingsState>.from(
-      state.savedPresets..remove('default'),
+    final newKey = 'preset_${DateTime.now().millisecondsSinceEpoch}';
+
+    // 1. Create a mutable copy of the existing map
+    final updatedPresets = Map<String, ViewportSettingsState>.from(
+      state.savedPresets,
     );
 
-    // Limit custom presets to max 3
-    if (userPresets.length >= 3) return;
+    // 2. Perform your modifications on the copied map
+    updatedPresets[newKey] = ViewportSettingsState(
+      unifiedZoom: state.unifiedZoom,
+      textScale: state.textScale,
+      mediaScale: state.mediaScale,
+      lineHeight: state.lineHeight,
+      letterSpacing: state.letterSpacing,
+    );
 
-    final newKey = 'preset_${userPresets.length + 1}';
-    userPresets[newKey] = state;
-
-    final updatedAll = {'default': ViewportSettingsState.factoryDefaults, ...userPresets};
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_presetListPref, updatedAll.keys.toList());
-    await prefs.setString(_activeKeyPref, newKey);
-    await prefs.setString('$_presetPrefix$newKey', jsonEncode(state.toJson()));
-
+    // 3. Emit the updated state with the new map instance
     state = state.copyWith(
+      savedPresets: Map.unmodifiable(
+        updatedPresets,
+      ), // keep it immutable in state
       activePresetKey: newKey,
-      savedPresets: updatedAll,
     );
+
+    // 4. Persist to storage if applicable (SharedPreferences / Hive)
+    await _persistPresets(updatedPresets);
+  }
+
+  Future<void> _persistPresets(
+    Map<String, ViewportSettingsState> presets,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final keysList = presets.keys.toList();
+
+    // Save key registry and current active key
+    await prefs.setStringList(_presetListPref, keysList);
+    if (state.activePresetKey != null) {
+      await prefs.setString(_activeKeyPref, state.activePresetKey!);
+    }
+
+    // Save each preset entry as serialized JSON
+    for (final entry in presets.entries) {
+      await prefs.setString(
+        '$_presetPrefix${entry.key}',
+        jsonEncode(entry.value.toJson()),
+      );
+    }
   }
 }
 

@@ -1,10 +1,11 @@
 import 'package:design_gyan/commons/values.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/slide_data.dart';
+import '../providers/viewport_setting_provider.dart';
 
-class MediaCard extends StatelessWidget {
+class MediaCard extends ConsumerWidget {
   final MediaData media;
-
   const MediaCard({super.key, required this.media});
 
   BoxFit _getBoxFit() {
@@ -21,18 +22,16 @@ class MediaCard extends StatelessWidget {
     final fit = _getBoxFit();
     final isNetworkUrl = media.url.startsWith('http://') ||
         media.url.startsWith('https://');
-
     if (isNetworkUrl) {
       return Image.network(
         media.url,
         fit: fit,
-        alignment: Alignment.center, // Center-crop by default
+        alignment: Alignment.center,
         errorBuilder: (_, __, ___) => const Center(
           child: Icon(Icons.broken_image, color: Colors.white38, size: 40),
         ),
       );
     }
-
     return Image.asset(
       media.url,
       fit: fit,
@@ -44,18 +43,23 @@ class MediaCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
 
-    final cardWidth = screenSize.width * (media.widthFactor ?? 0.30);
-    final cardHeight = screenSize.height * (media.heightFactor ?? 0.45);
+    final screenSize = MediaQuery.of(context).size;
+    final scaledMediaWidth = (media.widthFactor ?? 0.30) * viewport.mediaScale;
+    final scaledMediaHeight = (media.heightFactor ?? 0.45) * viewport.mediaScale;
+
+    final cardWidth = screenSize.width * scaledMediaWidth.clamp(0.15, 0.80);
+    final cardHeight = screenSize.height * scaledMediaHeight.clamp(0.20, 0.85);
 
     return Container(
       width: cardWidth,
-      height: cardHeight, // Lock exact height so cover mode crops properly
+      height: cardHeight,
       decoration: BoxDecoration(
         color: const Color(0xFF121620),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12 * viewport.unifiedZoom),
         border: Border.all(color: Colors.white12),
         boxShadow: const [
           BoxShadow(
@@ -76,14 +80,15 @@ class MediaCard extends StatelessWidget {
           ),
           if (media.caption.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0 * viewport.unifiedZoom),
               child: Text(
                 media.caption,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: baseUiSize * 0.85 * viewport.textScale,
+                  height: viewport.lineHeight,
+                  letterSpacing: viewport.letterSpacing,
                   color: Colors.white70,
-                  height: 1.3,
                 ),
               ),
             ),

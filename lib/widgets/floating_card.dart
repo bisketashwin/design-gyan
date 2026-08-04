@@ -1,34 +1,42 @@
 import 'package:design_gyan/models/slide_data.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/viewport_setting_provider.dart';
 import '../utils/markdown_formatter.dart';
-class FloatingCard extends StatefulWidget {
-  final SlideData slide;
 
+class FloatingCard extends ConsumerStatefulWidget {
+  final SlideData slide;
   const FloatingCard({super.key, required this.slide});
 
   @override
-  State<FloatingCard> createState() => _FloatingCardState();
+  ConsumerState<FloatingCard> createState() => _FloatingCardState();
 }
 
-class _FloatingCardState extends State<FloatingCard> {
+class _FloatingCardState extends ConsumerState<FloatingCard> {
   bool _isMinimized = false;
 
   @override
   Widget build(BuildContext context) {
+    final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
     final slide = widget.slide;
 
     return GestureDetector(
-      onTap: () {}, // Blocks tap bubbling to presentation tap-handler
+      onTap: () {},
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
-        width: _isMinimized ? 320 : 520,
-        constraints: BoxConstraints(maxHeight: _isMinimized ? 64 : 580),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        width: (_isMinimized ? 320 : 520) * viewport.unifiedZoom,
+        constraints: BoxConstraints(
+          maxHeight: (_isMinimized ? 64 : 580) * viewport.unifiedZoom,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: 20 * viewport.unifiedZoom,
+          vertical: 12 * viewport.unifiedZoom,
+        ),
         decoration: BoxDecoration(
           color: const Color(0xFF090A0F).withOpacity(0.92),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16 * viewport.unifiedZoom),
           border: Border.all(color: Colors.white12),
           boxShadow: const [
             BoxShadow(
@@ -45,22 +53,23 @@ class _FloatingCardState extends State<FloatingCard> {
             Row(
               children: [
                 if (_isMinimized) ...[
-                  const Icon(
+                  Icon(
                     Icons.info_outline,
-                    color: Color(0xFFFFB800),
-                    size: 20,
+                    color: const Color(0xFFFFB800),
+                    size: baseUiSize * 1.4,
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8 * viewport.unifiedZoom),
                 ],
                 Expanded(
                   child: Text(
                     slide.title.toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: baseUiSize * 1.3 * viewport.textScale,
                       fontWeight: FontWeight.w900,
-                      color: Color(0xFFFFB800),
+                      letterSpacing: viewport.letterSpacing,
+                      color: const Color(0xFFFFB800),
                     ),
                   ),
                 ),
@@ -70,7 +79,7 @@ class _FloatingCardState extends State<FloatingCard> {
                   icon: Icon(
                     _isMinimized ? Icons.open_in_full : Icons.close_fullscreen,
                     color: Colors.white70,
-                    size: 20,
+                    size: baseUiSize * 1.4,
                   ),
                   onPressed: () {
                     setState(() {
@@ -82,49 +91,60 @@ class _FloatingCardState extends State<FloatingCard> {
             ),
             if (!_isMinimized) ...[
               if (slide.subtitle != null) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8 * viewport.unifiedZoom),
                 Text(
                   slide.subtitle!,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: TextStyle(
+                    fontSize: baseUiSize * 1.3 * viewport.textScale,
                     fontStyle: FontStyle.italic,
-                    color: Color(0xFF00F0FF),
+                    letterSpacing: viewport.letterSpacing,
+                    color: const Color(0xFF00F0FF),
                   ),
                 ),
               ],
-              if (slide.callouts.isNotEmpty) const SizedBox(height: 12),
+              if (slide.callouts.isNotEmpty) SizedBox(height: 12 * viewport.unifiedZoom),
               ...slide.callouts.map(
                 (text) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                  padding: EdgeInsets.only(bottom: 10.0 * viewport.unifiedZoom),
                   child: Text(
                     text,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFFFFB800),
+                    style: TextStyle(
+                      fontSize: baseUiSize * 1.05 * viewport.textScale,
+                      color: const Color(0xFFFFB800),
                       fontStyle: FontStyle.italic,
+                      height: viewport.lineHeight,
+                      letterSpacing: viewport.letterSpacing,
                     ),
                   ),
                 ),
               ),
               if (slide.items.isNotEmpty) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8 * viewport.unifiedZoom),
                 Flexible(
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: slide.items.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        padding: EdgeInsets.symmetric(vertical: 6.0 * viewport.unifiedZoom),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("⚡ ", style: TextStyle(color: Color(0xFFFFB800))),
+                            Text(
+                              "⚡ ",
+                              style: TextStyle(
+                                fontSize: baseUiSize * 1.05 * viewport.textScale,
+                                color: const Color(0xFFFFB800),
+                              ),
+                            ),
                             Expanded(
                               child: RichText(
                                 text: MarkdownFormatter.parseInline(
                                   slide.items[index],
-                                  const TextStyle(
-                                    fontSize: 15,
+                                  TextStyle(
+                                    fontSize: baseUiSize * 1.05 * viewport.textScale,
+                                    height: viewport.lineHeight,
+                                    letterSpacing: viewport.letterSpacing,
                                     color: Colors.white70,
                                   ),
                                 ),

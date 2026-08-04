@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/viewport_setting_provider.dart';
 import 'animators/step_animator.dart';
 
-class SlideHeader extends StatelessWidget {
+class SlideHeader extends ConsumerWidget {
   final String title;
   final String? subtitle;
   final int visibleStepCount;
@@ -14,12 +16,10 @@ class SlideHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    // Step 0: Blank
-    // Step 1: Title becomes visible
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
     final bool isTitleVisible = visibleStepCount >= 1;
-
-    // Step 2: Subtitle becomes visible (if subtitle exists)
     final bool isSubtitleVisible = subtitle != null && visibleStepCount >= 2;
 
     return Column(
@@ -29,24 +29,25 @@ class SlideHeader extends StatelessWidget {
           isVisible: isTitleVisible,
           child: Text(
             title.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 40,
+            style: TextStyle(
+              fontSize: baseUiSize * 2.85 * viewport.textScale,
               fontWeight: FontWeight.w900,
-              letterSpacing: 1.5,
-              color: Color(0xFFFFB800),
+              letterSpacing: (1.5 * viewport.unifiedZoom) + viewport.letterSpacing,
+              color: const Color(0xFFFFB800),
             ),
           ),
         ),
         if (subtitle != null) ...[
-          const SizedBox(height: 8),
+          SizedBox(height: 8 * viewport.unifiedZoom),
           StepAnimator(
             isVisible: isSubtitleVisible,
             child: Text(
               subtitle!,
-              style: const TextStyle(
-                fontSize: 22,
+              style: TextStyle(
+                fontSize: baseUiSize * 1.55 * viewport.textScale,
                 fontStyle: FontStyle.italic,
-                color: Color(0xFF00F0FF),
+                letterSpacing: viewport.letterSpacing,
+                color: const Color(0xFF00F0FF),
               ),
             ),
           ),

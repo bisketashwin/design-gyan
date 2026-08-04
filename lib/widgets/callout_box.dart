@@ -1,32 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/viewport_setting_provider.dart';
 import '../utils/markdown_formatter.dart';
 
-class CalloutBox extends StatelessWidget {
+class CalloutBox extends ConsumerWidget {
   final String calloutText;
-
   const CalloutBox({
     super.key,
     required this.calloutText,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 28),
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+      margin: EdgeInsets.only(bottom: 28 * viewport.unifiedZoom),
+      padding: EdgeInsets.symmetric(
+        horizontal: 22 * viewport.unifiedZoom,
+        vertical: 18 * viewport.unifiedZoom,
+      ),
       decoration: BoxDecoration(
         color: const Color(0xFF121620),
-        borderRadius: BorderRadius.circular(8),
-        border: const Border(
-          left: BorderSide(color: Color(0xFFFFB800), width: 4),
+        borderRadius: BorderRadius.circular(8 * viewport.unifiedZoom),
+        border: Border(
+          left: BorderSide(
+            color: const Color(0xFFFFB800),
+            width: 4 * viewport.unifiedZoom,
+          ),
         ),
       ),
       child: RichText(
         text: MarkdownFormatter.parseInline(
           calloutText,
-          const TextStyle(
-            fontSize: 19,
-            height: 1.4,
+          TextStyle(
+            fontSize: baseUiSize * 1.35 * viewport.textScale,
+            height: viewport.lineHeight,
+            letterSpacing: viewport.letterSpacing,
             color: Colors.white70,
           ),
         ),

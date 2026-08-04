@@ -1,8 +1,17 @@
-import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:design_gyan/widgets/view_port_settings_dialogue/dialogue_theme.dart';
 import 'package:flutter/material.dart';
-  
-  Widget buildFotterActions(BuildContext context, ViewportSettingsNotifier notifier) {
+import '../../../providers/viewport_setting_provider.dart';
+
+class DialogFooter extends StatelessWidget {
+  const DialogFooter({
+    super.key,
+    required this.notifier,
+  });
+
+  final ViewportSettingsNotifier notifier;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -38,6 +47,4 @@ import 'package:flutter/material.dart';
       ],
     );
   }
-
-
-
+}

@@ -40,6 +40,8 @@
 * AI is playing equilzer for you young and we experinced.
 * **Golden Age of Game Development**.
 <!-- align: bottom-right -->
+<!-- size: width 40% height 50% -->
+<!-- fit: contain -->
 ![GETTY IMAGES : Steve Jobs referenced his early relationship with Steve Wozniak at the iPad's launch in 2010](assets/images/steve_jobs_steve_wozniak.jpg)
 ---
 
@@ -53,7 +55,10 @@
 * rapid design and development of core game play, 
 * test, get feedback, 
 * iterate without wasting time.
-<!-- align: bottom-right -->
+
+<!-- align: top-right -->
+<!-- size: width 20% height 80% -->
+<!-- fit: cover -->
 ![80s the Golden Age of Arcade Games (Image Credit: Video Amusement)](assets/images/arcade_games.jpg)
 ---
 

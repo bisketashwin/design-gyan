@@ -1,10 +1,10 @@
-// lib/widgets/slide_content_list.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/viewport_setting_provider.dart';
 import '../utils/markdown_formatter.dart';
 import 'animators/step_animator.dart';
 
-class SlideContentList extends StatefulWidget {
+class SlideContentList extends ConsumerStatefulWidget {
   final List<String> items;
   final int visibleItemCount;
 
@@ -15,10 +15,10 @@ class SlideContentList extends StatefulWidget {
   });
 
   @override
-  State<SlideContentList> createState() => _SlideContentListState();
+  ConsumerState<SlideContentList> createState() => _SlideContentListState();
 }
 
-class _SlideContentListState extends State<SlideContentList> {
+class _SlideContentListState extends ConsumerState<SlideContentList> {
   final ScrollController _scrollController = ScrollController();
   late List<GlobalKey> _itemKeys;
 
@@ -31,12 +31,9 @@ class _SlideContentListState extends State<SlideContentList> {
   @override
   void didUpdateWidget(covariant SlideContentList oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (widget.items.length != oldWidget.items.length) {
       _itemKeys = List.generate(widget.items.length, (_) => GlobalKey());
     }
-
-    // When stepping forward to reveal an item
     if (widget.visibleItemCount > oldWidget.visibleItemCount &&
         widget.visibleItemCount > 0) {
       _scrollToItem(widget.visibleItemCount - 1);
@@ -45,8 +42,6 @@ class _SlideContentListState extends State<SlideContentList> {
 
   void _scrollToItem(int index) {
     if (index < 0 || index >= _itemKeys.length) return;
-
-    // Post-frame callback ensures the animation step state has been processed by Flutter
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final keyContext = _itemKeys[index].currentContext;
       if (keyContext != null) {
@@ -54,7 +49,7 @@ class _SlideContentListState extends State<SlideContentList> {
           keyContext,
           duration: const Duration(milliseconds: 350),
           curve: Curves.easeOutCubic,
-          alignment: 0.9, // Positions the active item near the bottom of the viewport
+          alignment: 0.9,
           alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
         );
       }
@@ -69,6 +64,9 @@ class _SlideContentListState extends State<SlideContentList> {
 
   @override
   Widget build(BuildContext context) {
+    final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
+
     return Expanded(
       child: ListView.builder(
         controller: _scrollController,
@@ -76,21 +74,20 @@ class _SlideContentListState extends State<SlideContentList> {
         itemCount: widget.items.length,
         itemBuilder: (context, index) {
           final isVisible = index < widget.visibleItemCount;
-
           return KeyedSubtree(
             key: _itemKeys[index],
             child: StepAnimator(
               isVisible: isVisible,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: EdgeInsets.symmetric(vertical: 10.0 * viewport.unifiedZoom),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "⚡ ",
                       style: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xFFFFB800),
+                        fontSize: baseUiSize * 1.4 * viewport.textScale,
+                        color: const Color(0xFFFFB800),
                       ),
                     ),
                     Expanded(
@@ -98,8 +95,9 @@ class _SlideContentListState extends State<SlideContentList> {
                         text: MarkdownFormatter.parseInline(
                           widget.items[index],
                           TextStyle(
-                            fontSize: 21,
-                            height: 1.5,
+                            fontSize: baseUiSize * 1.5 * viewport.textScale,
+                            height: viewport.lineHeight,
+                            letterSpacing: viewport.letterSpacing,
                             color: isVisible ? Colors.white70 : Colors.white24,
                           ),
                         ),
