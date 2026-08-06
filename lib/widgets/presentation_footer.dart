@@ -1,3 +1,4 @@
+import 'package:design_gyan/providers/presentation_provider.dart';
 import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:design_gyan/widgets/view_port_settings_dialogue/viewport_settings_dialog.dart';
 import 'package:flutter/material.dart';
@@ -94,10 +95,25 @@ class PresentationFooter extends ConsumerWidget {
           }),
         ),
 
-        // Settings Button & Shortcut Helper
+        // Settings Button, Fullscreen Toggle & Shortcut Helper
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Fullscreen Toggle Button
+            IconButton(
+              tooltip: "Toggle Fullscreen",
+              icon: Icon(
+                Icons.fullscreen,
+                size: baseUiSize * 1.35,
+                color: Colors.white54,
+              ),
+              onPressed: () {
+                ref.read(presentationProvider.notifier).toggleFullscreen();
+              },
+            ),
+            const SizedBox(width: 4),
+
+            // Viewport Settings Dialog Trigger
             Stack(
               clipBehavior: Clip.none,
               children: [
@@ -136,7 +152,7 @@ class PresentationFooter extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: baseUiSize * 0.85, // 0.85x Small helper label
                   letterSpacing: 1.5 + viewportSettings.letterSpacing,
-                  color:isAtSlideEnd ? Colors.black : Colors.white24,
+                  color: isAtSlideEnd ? Colors.black : Colors.white24,
                 ),
               ),
             ),
@@ -147,7 +163,7 @@ class PresentationFooter extends ConsumerWidget {
   }
 
   String _keyboardInteractionMessage(bool frictionOn) {
-    if(frictionOn){
+    if (frictionOn) {
       return "DOUBLE TAP SPACE/ARROWS TO NEXT SLIDE";
     }
     return "SPACE / ARROWS TO NAVIGATE";

@@ -51,7 +51,7 @@ class SlideData {
   });
 
   factory SlideData.fromMarkdown(String rawMarkdown) {
-    String title = 'UNTITLED SLIDE';
+    String title = '';
     String? subtitle;
     List<String> callouts = [];
     List<String> items = [];

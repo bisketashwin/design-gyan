@@ -6,6 +6,7 @@ class PresentationState {
   final int visibleStepCount; // Starts at 0 (Blank)
   final bool isLoading;
   final bool isAtSlideEnd;
+  final bool isFullscreen;
 
   const PresentationState({
     this.slides = const [],
@@ -13,6 +14,7 @@ class PresentationState {
     this.visibleStepCount = 0,
     this.isLoading = true,
     this.isAtSlideEnd = false,
+    this.isFullscreen = false,
   });
 
   SlideData? get currentSlide =>
@@ -42,6 +44,7 @@ class PresentationState {
     int? visibleStepCount,
     bool? isAtSlideEnd,
     bool? isLoading,
+    bool? isFullscreen,
   }) {
     return PresentationState(
       slides: slides ?? this.slides,
@@ -49,6 +52,7 @@ class PresentationState {
       visibleStepCount: visibleStepCount ?? this.visibleStepCount,
       isAtSlideEnd: isAtSlideEnd ?? this.isAtSlideEnd,
       isLoading: isLoading ?? this.isLoading,
+      isFullscreen: isFullscreen ?? this.isFullscreen,
     );
   }
 }

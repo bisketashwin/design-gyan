@@ -17,6 +17,7 @@ dependencies:
   youtube_player_iframe: ^5.1.2
   pointer_interceptor: ^0.10.1+2
   shared_preferences: ^2.5.5
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:

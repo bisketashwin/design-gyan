@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:web/web.dart' as web;
 import 'package:design_gyan/providers/viewport_setting_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/slide_data.dart';
@@ -20,6 +22,23 @@ class PresentationNotifier extends Notifier<PresentationState> {
     ref.onDispose(() => _frictionTimer?.cancel());
     _loadMarkdownSlides();
     return const PresentationState();
+  }
+
+  void toggleFullscreen() {
+    if (kIsWeb) {
+      final document = web.document;
+      if (document.fullscreenElement == null) {
+        document.documentElement?.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    } else {
+      // Native state toggle
+      state = state.copyWith(isFullscreen: !state.isFullscreen);
+      SystemChrome.setEnabledSystemUIMode(
+        state.isFullscreen ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
+      );
+    }
   }
 
   Future<void> _loadMarkdownSlides() async {
