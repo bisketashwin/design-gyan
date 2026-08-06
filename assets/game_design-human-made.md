@@ -1,7 +1,8 @@
-
+<!-- type: title-card -->
 # Games.
+---
 <!-- type: cards-grid:column 3 -->
-## What comes to head?
+# Games. What comes to head?
 * Gillidanda, (assets/images/gilli_danda_1.jpg)
 * vattappa, (assets/images/vattappa_1.webp)
 * kabaddi, (assets/images/kabaddi_1.jpg)
@@ -10,20 +11,12 @@
 * snake and ladder (assets/images/snake_and_ladder_1.jpg)
 
 ---
-
+<!-- type: title-card -->
 # Why do you play games?
 
 ---
-
+<!-- type: title-card -->
 # What is NOT a game?
-
----
-
-# Homemade noodles vs. ready-to-eat vs. hotel chef-cooked
-
----
-
-# Games → Computer games → AI-based Human Made Games
 
 ---
 

@@ -79,6 +79,8 @@ class SlideData {
           final typeValue = content.replaceFirst('type:', '').trim();
           if (typeValue == 'full-media') {
             slideType = SlideType.fullMedia;
+          } else if (typeValue == 'title-card') {
+            slideType = SlideType.titleCard; 
           } else if (typeValue.startsWith('cards-grid:')) {
             slideType = SlideType.grid;
             // Parse "cards-grid:column 3" or "cards-grid:row 2"

@@ -35,28 +35,62 @@ class PresentationNotifier extends Notifier<PresentationState> {
     }
   }
 
+  // lib/providers/presentation_provider.dart
   void nextStep() {
     if (state.currentSlide?.type == SlideType.fullMedia) {
+      if (!state.isAtSlideEnd && state.currentSlideIndex < state.slides.length - 1) {
+        state = state.copyWith(isAtSlideEnd: true);
+        return;
+      }
       nextSlideDirect();
       return;
     }
+
+    // Phase 1: Reveal steps inside slide
     if (state.visibleStepCount < state.totalStepCount) {
-      state = state.copyWith(visibleStepCount: state.visibleStepCount + 1);
-    } else if (state.currentSlideIndex < state.slides.length - 1) {
-      // Route through _setCurrentSlideIndex instead of inline copyWith
+      final nextStep = state.visibleStepCount + 1;
+      final reachedEnd = nextStep >= state.totalStepCount;
+      state = state.copyWith(
+        visibleStepCount: nextStep,
+        isAtSlideEnd: reachedEnd && state.currentSlideIndex < state.slides.length - 1,
+      );
+    } 
+    // Phase 2: Friction barrier check
+    else if (!state.isAtSlideEnd && state.currentSlideIndex < state.slides.length - 1) {
+      state = state.copyWith(isAtSlideEnd: true);
+    } 
+    // Phase 3: Transition to next slide
+    else if (state.currentSlideIndex < state.slides.length - 1) {
       _setCurrentSlideIndex(state.currentSlideIndex + 1);
     }
   }
 
   void previousStep() {
+    if (state.isAtSlideEnd) {
+      state = state.copyWith(isAtSlideEnd: false);
+      return;
+    }
+    
     if (state.currentSlide?.type == SlideType.fullMedia) {
       previousSlideDirect();
       return;
     }
+
     if (state.visibleStepCount > 1) {
       state = state.copyWith(visibleStepCount: state.visibleStepCount - 1);
     } else if (state.currentSlideIndex > 0) {
       _setCurrentSlideIndex(state.currentSlideIndex - 1);
+    }
+  }
+
+  void _setCurrentSlideIndex(int newIndex) {
+    if (newIndex >= 0 && newIndex < state.slides.length) {
+      state = state.copyWith(
+        currentSlideIndex: newIndex,
+        visibleStepCount: 0,
+        isAtSlideEnd: false, // Reset friction indicator
+      );
+      onSlideEnter();
     }
   }
 
@@ -84,16 +118,6 @@ class PresentationNotifier extends Notifier<PresentationState> {
   void previousSlideDirect() {
     if (state.currentSlideIndex > 0) {
       _setCurrentSlideIndex(state.currentSlideIndex - 1);
-    }
-  }
-
-  void _setCurrentSlideIndex(int newIndex) {
-    if (newIndex >= 0 && newIndex < state.slides.length) {
-      state = state.copyWith(
-        currentSlideIndex: newIndex,
-        visibleStepCount: 0, // Reset to 0 so entrance animation can play
-      );
-      onSlideEnter();
     }
   }
 

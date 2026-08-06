@@ -4,6 +4,8 @@ import 'package:design_gyan/commons/values.dart';
 import 'package:design_gyan/widgets/full_media_slide_view.dart';
 import 'package:design_gyan/widgets/standard_slide.dart';
 import 'package:design_gyan/widgets/view_port_settings_dialogue/widgets/grid_slide_view.dart';
+import 'package:design_gyan/widgets/view_port_settings_dialogue/widgets/slide_end_indicator.dart';
+import 'package:design_gyan/widgets/view_port_settings_dialogue/widgets/title_card_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -69,11 +71,17 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
                   visibleStepCount: state.visibleStepCount,
                 )
                 else if (slide.type == SlideType.grid)
-                  GridSlideView(
-                    key: ValueKey('grid_${state.currentSlideIndex}'),
-                    slide: slide,
-                    visibleStepCount: state.visibleStepCount,
-                  )
+                GridSlideView(
+                  key: ValueKey('grid_${state.currentSlideIndex}'),
+                  slide: slide,
+                  visibleStepCount: state.visibleStepCount,
+                )
+              else if (slide.type == SlideType.titleCard)
+                TitleCardSlideView(
+                  key: ValueKey('title_${state.currentSlideIndex}'),
+                  slide: slide,
+                  visibleStepCount: state.visibleStepCount,
+                )
               else
                 StandardSlideView(
                   key: ValueKey('standard_${state.currentSlideIndex}'),
@@ -81,7 +89,8 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
                   visibleStepCount: state.visibleStepCount,
                   visibleListItems: visibleListItems,
                 ),
-              
+                
+              SlideEndIndicator(isAtEnd: state.isAtSlideEnd),
               // Nav Buttons floating on edge interop channels
               if (state.currentSlideIndex > 0)
                 Positioned(

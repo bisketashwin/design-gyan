@@ -5,12 +5,14 @@ class PresentationState {
   final int currentSlideIndex;
   final int visibleStepCount; // Starts at 0 (Blank)
   final bool isLoading;
+  final bool isAtSlideEnd;
 
   const PresentationState({
     this.slides = const [],
     this.currentSlideIndex = 0,
     this.visibleStepCount = 0,
     this.isLoading = true,
+    this.isAtSlideEnd = false,
   });
 
   SlideData? get currentSlide =>
@@ -32,16 +34,20 @@ class PresentationState {
     return steps;
   }
 
+  bool get isFullyRevealed => visibleStepCount >= totalStepCount;
+
   PresentationState copyWith({
     List<SlideData>? slides,
     int? currentSlideIndex,
     int? visibleStepCount,
+    bool? isAtSlideEnd,
     bool? isLoading,
   }) {
     return PresentationState(
       slides: slides ?? this.slides,
       currentSlideIndex: currentSlideIndex ?? this.currentSlideIndex,
       visibleStepCount: visibleStepCount ?? this.visibleStepCount,
+      isAtSlideEnd: isAtSlideEnd ?? this.isAtSlideEnd,
       isLoading: isLoading ?? this.isLoading,
     );
   }
