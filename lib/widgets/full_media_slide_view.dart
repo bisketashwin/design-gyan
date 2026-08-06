@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:design_gyan/commons/helpers.dart';
 import 'package:design_gyan/commons/values.dart';
 import 'package:design_gyan/providers/viewport_setting_provider.dart';
+import 'package:design_gyan/utils/youtube_url_parser.dart';
 import 'package:design_gyan/widgets/floating_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,27 +44,33 @@ class _FullMediaSlideViewState extends ConsumerState<FullMediaSlideView> {
     }
   }
 
-  void _initVideo() {
-    final media = widget.slide.media;
-    if (media != null && media.type == MediaType.video) {
-      final videoId = YoutubePlayerController.convertUrlToId(media.url);
-      if (videoId != null) {
-        _youtubeController = YoutubePlayerController.fromVideoId(
-          videoId: videoId,
-          params: const YoutubePlayerParams(
-            showControls: true,
-            showFullscreenButton: false,
-          ),
-        );
-        _playerStateSubscription =
-            _youtubeController!.stream.listen((event) {
-          if (event.playerState == PlayerState.ended) {
-            ref.read(presentationProvider.notifier).nextSlideDirect();
-          }
-        });
-      }
+void _initVideo() {
+  final media = widget.slide.media;
+  if (media != null && media.type == MediaType.video) {
+    final parsedData = YoutubeUrlParser.parse(media.url);
+    
+    if (parsedData.videoId != null) {
+      _youtubeController = YoutubePlayerController(
+        params: const YoutubePlayerParams(
+          showControls: true,
+          showFullscreenButton: false,
+        ),
+      );
+
+      // Load the video with startSeconds specified
+      _youtubeController!.loadVideoById(
+        videoId: parsedData.videoId!,
+        startSeconds: parsedData.startSeconds.toDouble(),
+      );
+
+      _playerStateSubscription = _youtubeController!.stream.listen((event) {
+        if (event.playerState == PlayerState.ended) {
+          ref.read(presentationProvider.notifier).nextSlideDirect();
+        }
+      });
     }
   }
+}
 
   void _cleanupVideo() {
     _playerStateSubscription?.cancel();

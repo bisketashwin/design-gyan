@@ -19,7 +19,7 @@ class PresentationNotifier extends Notifier<PresentationState> {
 
   Future<void> _loadMarkdownSlides() async {
     try {
-      final String rawMd = await rootBundle.loadString('assets/game_design.md');
+      final String rawMd = await rootBundle.loadString('assets/game_design-human-made.md');
       final rawSlides = rawMd.replaceAll('\r\n', '\n').split(RegExp(r'\n---\n'));
       final parsedSlides = rawSlides
           .map((s) => SlideData.fromMarkdown(s))
