@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,8 +13,13 @@ final presentationProvider =
 );
 
 class PresentationNotifier extends Notifier<PresentationState> {
+  Timer? _frictionTimer;
+  int startingStepIndex = 1; // 0 if you want slide to be bank on evvery slide start with next arrow or space bar usage
   @override
   PresentationState build() {
+    ref.onDispose(() {
+      _frictionTimer?.cancel();
+    });
     _loadMarkdownSlides();
     return const PresentationState();
   }
@@ -28,66 +35,78 @@ class PresentationNotifier extends Notifier<PresentationState> {
       state = state.copyWith(
         slides: parsedSlides,
         isLoading: false,
-        visibleStepCount: 0,
+        visibleStepCount: startingStepIndex,
       );
     } catch (_) {
       state = state.copyWith(isLoading: false);
     }
   }
 
-  // lib/providers/presentation_provider.dart
   void nextStep() {
-    if (state.currentSlide?.type == SlideType.fullMedia) {
-      if (!state.isAtSlideEnd && state.currentSlideIndex < state.slides.length - 1) {
-        state = state.copyWith(isAtSlideEnd: true);
-        return;
-      }
-      nextSlideDirect();
-      return;
-    }
-
-    // Phase 1: Reveal steps inside slide
-    if (state.visibleStepCount < state.totalStepCount) {
-      final nextStep = state.visibleStepCount + 1;
-      final reachedEnd = nextStep >= state.totalStepCount;
-      state = state.copyWith(
-        visibleStepCount: nextStep,
-        isAtSlideEnd: reachedEnd && state.currentSlideIndex < state.slides.length - 1,
-      );
-    } 
-    // Phase 2: Friction barrier check
-    else if (!state.isAtSlideEnd && state.currentSlideIndex < state.slides.length - 1) {
-      state = state.copyWith(isAtSlideEnd: true);
-    } 
-    // Phase 3: Transition to next slide
-    else if (state.currentSlideIndex < state.slides.length - 1) {
-      _setCurrentSlideIndex(state.currentSlideIndex + 1);
-    }
+  if (state.currentSlide?.type == SlideType.fullMedia) {
+    _handleTerminalStepFriction();
+    return;
   }
 
-  void previousStep() {
-    if (state.isAtSlideEnd) {
-      state = state.copyWith(isAtSlideEnd: false);
-      return;
-    }
+  // Phase 1: Reveal internal items
+  if (state.visibleStepCount < state.totalStepCount) {
+    final nextStep = state.visibleStepCount + 1;
+    final reachedEnd = nextStep >= state.totalStepCount;
     
-    if (state.currentSlide?.type == SlideType.fullMedia) {
-      previousSlideDirect();
-      return;
-    }
+    state = state.copyWith(
+      visibleStepCount: nextStep,
+      // If we just revealed the final item, immediately prompt the visual friction indicator
+      isAtSlideEnd: reachedEnd && state.currentSlideIndex < state.slides.length - 1,
+    );
+  } 
+  // Phase 2: Slide is already fully revealed; enforce double-press gate
+  else if (state.currentSlideIndex < state.slides.length - 1) {
+    _handleTerminalStepFriction();
+  }
+}
 
-    if (state.visibleStepCount > 1) {
-      state = state.copyWith(visibleStepCount: state.visibleStepCount - 1);
-    } else if (state.currentSlideIndex > 0) {
-      _setCurrentSlideIndex(state.currentSlideIndex - 1);
+  void _handleTerminalStepFriction() {
+    final viewportState = ref.read(viewportSettingsProvider);
+    // Enabled = 500ms (requires double-click to advance)
+    // Disabled = 1500ms (single click gives ample window to advance)
+    final int frictionTimeoutDuration = viewportState.isFrictionEnabled ? 500 : 1500;
+
+    if (state.isAtSlideEnd && _frictionTimer != null && _frictionTimer!.isActive) {
+      _frictionTimer?.cancel();
+      _setCurrentSlideIndex(state.currentSlideIndex + 1);
+    } else {
+      state = state.copyWith(isAtSlideEnd: true);
+      _frictionTimer?.cancel();
+      _frictionTimer = Timer(Duration(milliseconds: frictionTimeoutDuration), () {
+        state = state.copyWith(isAtSlideEnd: false);
+      });
     }
   }
+void previousStep() {
+  _frictionTimer?.cancel();
+  
+  if (state.isAtSlideEnd) {
+    state = state.copyWith(isAtSlideEnd: false);
+    return;
+  }
+
+  if (state.currentSlide?.type == SlideType.fullMedia) {
+    previousSlideDirect();
+    return;
+  }
+
+  if (state.visibleStepCount > 1) {
+    state = state.copyWith(visibleStepCount: state.visibleStepCount - 1);
+  } else if (state.currentSlideIndex > 0) {
+    _setCurrentSlideIndex(state.currentSlideIndex - 1);
+  }
+}
 
   void _setCurrentSlideIndex(int newIndex) {
     if (newIndex >= 0 && newIndex < state.slides.length) {
       state = state.copyWith(
         currentSlideIndex: newIndex,
-        visibleStepCount: 0,
+        visibleStepCount: startingStepIndex,
         isAtSlideEnd: false, // Reset friction indicator
       );
       onSlideEnter();
@@ -95,13 +114,13 @@ class PresentationNotifier extends Notifier<PresentationState> {
   }
 
   void goToFirst() {
-    state = state.copyWith(currentSlideIndex: 0, visibleStepCount: 0);
+    state = state.copyWith(currentSlideIndex: 0, visibleStepCount: startingStepIndex);
   }
 
   void goToLast() {
     state = state.copyWith(
       currentSlideIndex: state.slides.length - 1,
-      visibleStepCount: 0,
+      visibleStepCount: startingStepIndex,
     );
   }
 
@@ -117,7 +136,17 @@ class PresentationNotifier extends Notifier<PresentationState> {
 
   void previousSlideDirect() {
     if (state.currentSlideIndex > 0) {
-      _setCurrentSlideIndex(state.currentSlideIndex - 1);
+      final targetIndex = state.currentSlideIndex - 1;
+      final targetSlide = state.slides[targetIndex];
+      
+      // Calculate total steps for the previous slide to fully reveal it
+      final totalSteps = _getStepCountForSlide(targetSlide);
+
+      state = state.copyWith(
+        currentSlideIndex: targetIndex,
+        visibleStepCount: totalSteps,
+        isAtSlideEnd: false,
+      );
     }
   }
 
@@ -129,7 +158,7 @@ class PresentationNotifier extends Notifier<PresentationState> {
     if (slide.type == SlideType.standard && state.totalStepCount > 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (state.visibleStepCount == 0) {
-          state = state.copyWith(visibleStepCount: 1);
+          state = state.copyWith(visibleStepCount: startingStepIndex);
         }
       }); 
     }
@@ -163,5 +192,14 @@ class PresentationNotifier extends Notifier<PresentationState> {
         goToLast();
       }
     }
+  }
+
+  int _getStepCountForSlide(SlideData slide) {
+    int headerSteps = 1 + (slide.subtitle != null ? 1 : 0);
+    int steps = headerSteps;
+    steps += slide.callouts.length;
+    steps += slide.items.length;
+    steps += slide.gridItems.length;
+    return steps;
   }
 }

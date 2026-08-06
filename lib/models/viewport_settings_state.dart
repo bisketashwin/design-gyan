@@ -6,7 +6,7 @@ class ViewportSettingsState {
   final double mediaScale;
   final double lineHeight;
   final double letterSpacing;
-
+  final bool isFrictionEnabled;
   final String? activePresetKey; // Null if no preset saved yet
   final Map<String, ViewportSettingsState> savedPresets;
 
@@ -16,6 +16,7 @@ class ViewportSettingsState {
     this.mediaScale = 1.0,
     this.lineHeight = 1.4,
     this.letterSpacing = 0.0,
+    this.isFrictionEnabled = true,
     this.activePresetKey,
     this.savedPresets = const {},
   });
@@ -39,6 +40,7 @@ class ViewportSettingsState {
     mediaScale: 1.0,
     lineHeight: 1.4,
     letterSpacing: 0.0,
+    isFrictionEnabled: true,
   );
 
   bool hasDeltaFrom(ViewportSettingsState other) {
@@ -46,7 +48,8 @@ class ViewportSettingsState {
         (textScale - other.textScale).abs() > 0.001 ||
         (mediaScale - other.mediaScale).abs() > 0.001 ||
         (lineHeight - other.lineHeight).abs() > 0.001 ||
-        (letterSpacing - other.letterSpacing).abs() > 0.001;
+        (letterSpacing - other.letterSpacing).abs() > 0.001 ||
+        isFrictionEnabled != other.isFrictionEnabled;
   }
 
   Map<String, dynamic> toJson() => {
@@ -55,6 +58,7 @@ class ViewportSettingsState {
         'mediaScale': mediaScale,
         'lineHeight': lineHeight,
         'letterSpacing': letterSpacing,
+        'isFrictionEnabled': isFrictionEnabled,
       };
 
   factory ViewportSettingsState.fromJson(Map<String, dynamic> json) {
@@ -63,7 +67,8 @@ class ViewportSettingsState {
       textScale: (json['textScale'] as num?)?.toDouble() ?? 1.0,
       mediaScale: (json['mediaScale'] as num?)?.toDouble() ?? 1.0,
       lineHeight: (json['lineHeight'] as num?)?.toDouble() ?? 1.4,
-      letterSpacing: (json['letterSpacing'] as num?)?.toDouble() ?? 0.0,
+      letterSpacing: (json['letterSpacing'] as num?)?.toDouble() ?? 0.0,  
+      isFrictionEnabled: json['isFrictionEnabled'] as bool? ?? true,
     );
   }
 
@@ -75,6 +80,7 @@ class ViewportSettingsState {
     double? mediaScale,
     double? lineHeight,
     double? letterSpacing,
+    bool? isFrictionEnabled,
     String? activePresetKey,
     bool forceNullActivePreset = false,
     Map<String, ViewportSettingsState>? savedPresets,
@@ -85,6 +91,7 @@ class ViewportSettingsState {
       mediaScale: mediaScale ?? this.mediaScale,
       lineHeight: lineHeight ?? this.lineHeight,
       letterSpacing: letterSpacing ?? this.letterSpacing,
+      isFrictionEnabled: isFrictionEnabled ?? this.isFrictionEnabled,
       activePresetKey: forceNullActivePreset
           ? null
           : (activePresetKey ?? this.activePresetKey),
@@ -97,4 +104,5 @@ class ViewportSettingsState {
   String get formattedMediaScale => "${mediaScale.toStringAsFixed(2)}x";
   String get formattedLineHeight => lineHeight.toStringAsFixed(2);
   String get formattedLetterSpacing => "${letterSpacing.toStringAsFixed(1)}px";
+  String get frictionStatus => isFrictionEnabled ? "On" : "Off";
 }

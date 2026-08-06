@@ -106,6 +106,25 @@ class ViewportSettingsDialog extends ConsumerWidget {
                 onChanged: notifier.setLetterSpacing,
                 onResetProperty: notifier.resetLetterSpacing,
               ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "End-of-Slide Friction (Double Click)",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: ViewportDialogTheme.textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Switch(
+                    value: settings.isFrictionEnabled,
+                    activeColor: ViewportDialogTheme.editedSettingsColor,
+                    onChanged: notifier.setFrictionEnabled,
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               const PresetSelectorRow(),
               const Divider(color: ViewportDialogTheme.dividerColor, height: 28),

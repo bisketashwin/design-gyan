@@ -101,6 +101,9 @@ class ViewportSettingsNotifier extends Notifier<ViewportSettingsState> {
     );
   }
 
+  void setFrictionEnabled(bool value) =>
+    _updateStateWithSliderDelta(state.copyWith(isFrictionEnabled: value));
+
   void setUnifiedZoom(double value) =>
       _updateStateWithSliderDelta(state.copyWith(unifiedZoom: value.clamp(0.7, 1.5)));
 
