@@ -90,7 +90,7 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
                   visibleListItems: visibleListItems,
                 ),
                 
-              SlideEndIndicator(isAtEnd: state.isAtSlideEnd),
+              // SlideEndIndicator(isAtEnd: state.isAtSlideEnd),
               // Nav Buttons floating on edge interop channels
               if (state.currentSlideIndex > 0)
                 Positioned(
@@ -144,6 +144,7 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
                   child: PresentationFooter(
                     currentSlideIndex: state.currentSlideIndex,
                     totalSlides: state.slides.length,
+                    isAtSlideEnd: state.isAtSlideEnd,
                     onNext: () {
                       _reclaimFocus();
                       notifier.nextSlideDirect();

@@ -9,6 +9,7 @@ class PresentationFooter extends ConsumerWidget {
   final VoidCallback onNext;
   final VoidCallback onPrevious;
   final ValueChanged<int> onSelectSlide;
+  final bool isAtSlideEnd;
 
   const PresentationFooter({
     super.key,
@@ -17,6 +18,7 @@ class PresentationFooter extends ConsumerWidget {
     required this.onNext,
     required this.onPrevious,
     required this.onSelectSlide,
+    required this.isAtSlideEnd,
   });
 
   @override
@@ -126,17 +128,28 @@ class PresentationFooter extends ConsumerWidget {
               ],
             ),
             const SizedBox(width: 8),
-            Text(
-              "SPACE / ARROWS TO NAVIGATE",
-              style: TextStyle(
-                fontSize: baseUiSize * 0.85, // 0.85x Small helper label
-                letterSpacing: 1.5 + viewportSettings.letterSpacing,
-                color: Colors.white24,
+            Container(
+              color: isAtSlideEnd ? const Color(0xFFFFB800) : Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              child: Text(
+                _keyboardInteractionMessage(viewportSettings.isFrictionEnabled),
+                style: TextStyle(
+                  fontSize: baseUiSize * 0.85, // 0.85x Small helper label
+                  letterSpacing: 1.5 + viewportSettings.letterSpacing,
+                  color:isAtSlideEnd ? Colors.black : Colors.white24,
+                ),
               ),
             ),
           ],
         ),
       ],
     );
+  }
+
+  String _keyboardInteractionMessage(bool frictionOn) {
+    if(frictionOn){
+      return "DOUBLE TAP SPACE/ARROWS TO NEXT SLIDE";
+    }
+    return "SPACE / ARROWS TO NAVIGATE";
   }
 }

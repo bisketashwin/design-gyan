@@ -29,27 +29,6 @@ class SlideEndIndicator extends StatelessWidget {
               ),
             ],
           ),
-          child: Center(
-            child: OverflowBox(
-              maxHeight: 24,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFB800),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  "PRESS AGAIN TO ADVANCE",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
