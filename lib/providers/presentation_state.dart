@@ -28,6 +28,7 @@ class PresentationState {
     int steps = headerStepCount;
     steps += currentSlide!.callouts.length;
     steps += currentSlide!.items.length;
+    steps += currentSlide!.gridItems.length;
     return steps;
   }
 

@@ -1,13 +1,13 @@
 
 # Games.
-
-* What comes to head?
-* Gillidanda, 
-* vattappa, 
-* kabaddi, 
-* Langadi (hopscotch)
-* hide and seek
-* snake and ladder
+<!-- type: cards-grid:column 3 -->
+## What comes to head?
+* Gillidanda, (assets/images/gilli_danda_1.jpg)
+* vattappa, (assets/images/vattappa_1.webp)
+* kabaddi, (assets/images/kabaddi_1.jpg)
+* Langadi (hopscotch) (assets/images/hopscotch_2.jpg)
+* hide and seek (assets/images/hide_and_seek_1.jpg)
+* snake and ladder (assets/images/snake_and_ladder_1.jpg)
 
 ---
 
