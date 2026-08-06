@@ -62,8 +62,6 @@ class SlideData {
     int gridCount = 3;
     CardAlignment alignment = CardAlignment.bottomRight;
     MediaFit fit = MediaFit.cover;
-    double? widthFactor;
-    double? heightFactor;
 
     final lines = rawMarkdown.replaceAll('\r\n', '\n').split('\n');
     bool isInsideCommentBlock = false;
@@ -74,26 +72,31 @@ class SlideData {
 
       if (line.startsWith('<!--') && line.endsWith('-->')) {
         final content = line.replaceAll(RegExp(r'<!--|-->'), '').trim();
-        
         if (content.startsWith('type:')) {
           final typeValue = content.replaceFirst('type:', '').trim();
           if (typeValue == 'full-media') {
             slideType = SlideType.fullMedia;
           } else if (typeValue == 'title-card') {
-            slideType = SlideType.titleCard; 
+            slideType = SlideType.titleCard;
           } else if (typeValue.startsWith('cards-grid:')) {
             slideType = SlideType.grid;
-            // Parse "cards-grid:column 3" or "cards-grid:row 2"
-            final gridParts = typeValue.replaceFirst('cards-grid:', '').trim().split(RegExp(r'\s+'));
+            final gridParts = typeValue
+                .replaceFirst('cards-grid:', '')
+                .trim()
+                .split(RegExp(r'\s+'));
             if (gridParts.isNotEmpty) {
-              gridDirection = gridParts[0] == 'row' ? GridDirection.row : GridDirection.column;
+              gridDirection = gridParts[0] == 'row'
+                  ? GridDirection.row
+                  : GridDirection.column;
             }
             if (gridParts.length > 1) {
               gridCount = int.tryParse(gridParts[1]) ?? 3;
             }
           }
         } else if (content.startsWith('align:')) {
-          alignment = _parseAlignment(content.replaceFirst('align:', '').trim());
+          alignment = _parseAlignment(
+            content.replaceFirst('align:', '').trim(),
+          );
         } else if (content.startsWith('fit:')) {
           final fitStr = content.replaceFirst('fit:', '').trim();
           fit = fitStr == 'contain' ? MediaFit.contain : MediaFit.cover;
@@ -101,8 +104,14 @@ class SlideData {
         continue;
       }
 
-      if (line.startsWith('<!--')) { isInsideCommentBlock = true; continue; }
-      if (line.endsWith('-->')) { isInsideCommentBlock = false; continue; }
+      if (line.startsWith('<!--')) {
+        isInsideCommentBlock = true;
+        continue;
+      }
+      if (line.endsWith('-->')) {
+        isInsideCommentBlock = false;
+        continue;
+      }
       if (isInsideCommentBlock) continue;
 
       if (line.startsWith('# ')) {
@@ -111,12 +120,35 @@ class SlideData {
         subtitle = line.replaceFirst('## ', '');
       } else if (line.startsWith('> ')) {
         callouts.add(line.replaceFirst('> ', ''));
-      } else if (line.startsWith('* ') || line.startsWith('- ') || RegExp(r'^\d+\.\s+').hasMatch(line)) {
-        // Match label and optional image URL: "Label (assets/image.jpg)"
-        final cleanLine = line.replaceFirst(RegExp(r'^([\*\-]|(\d+\.))\s+'), '');
-        // Updated regex: optional comma before image path
-        final gridItemMatch = RegExp(r'^(.*?)\s*,?\s*\((assets\/.*?|https?:\/\/.*?)\)$').firstMatch(cleanLine);
-        if (gridItemMatch != null) {
+      }
+      // PARSE MEDIA SYNTAX: ![caption](url)
+      else if (line.startsWith('![')) {
+        final imageMatch = RegExp(r'^!\[(.*?)\]\((.*?)\)$').firstMatch(line);
+        if (imageMatch != null) {
+          final caption = imageMatch.group(1) ?? '';
+          final url = imageMatch.group(2) ?? '';
+          final isVideo =
+              url.contains('youtube.com') || url.contains('youtu.be');
+
+          media = MediaData(
+            url: url,
+            caption: caption,
+            type: isVideo ? MediaType.video : MediaType.image,
+            alignment: alignment,
+            fit: fit,
+          );
+        }
+      } else if (line.startsWith('* ') ||
+          line.startsWith('- ') ||
+          RegExp(r'^\d+\.\s+').hasMatch(line)) {
+        final cleanLine = line.replaceFirst(
+          RegExp(r'^([\*\-]|(\d+\.))\s+'),
+          '',
+        );
+        final gridItemMatch = RegExp(
+          r'^(.*?)\s*,?\s*\((assets\/.*?|https?:\/\/.*?)\)$',
+        ).firstMatch(cleanLine);
+        if (gridItemMatch != null && slideType == SlideType.grid) {
           final label = gridItemMatch.group(1)?.trim() ?? '';
           final imageUrl = gridItemMatch.group(2)?.trim() ?? '';
           gridItems.add(GridItemData(label: label, imageUrl: imageUrl));

@@ -78,12 +78,15 @@
 
 ---
 <!-- type: full-media -->
+<!-- align: top-right -->
+# Super Mario
 
 ![Super Mario](https://www.youtube.com/watch?v=c-prVcCiVOg&t=60)
 ---
 <!-- type: full-media -->
-
-![Subway Runner](https://www.youtube.com/watch?v=-TRq2Lb96hg&t=30)
+<!-- align: top-right -->
+# Subway Surfers
+![Subway Surfers](https://www.youtube.com/watch?v=-TRq2Lb96hg&t=30)
 
 ---
 
