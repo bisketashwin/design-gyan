@@ -1,5 +1,6 @@
 <!-- type: title-card -->
 # Games.
+## What comes to head?
 ---
 <!-- type: cards-grid:column 3 -->
 # Games. What comes to head?
@@ -13,6 +14,15 @@
 ---
 <!-- type: title-card -->
 # Why do you play games?
+---
+
+# What is a game?
+
+* Defined challenge
+* Rules & limitations
+* Allowed ways & means
+* Progress & mastery
+* Social recognition
 
 ---
 <!-- type: title-card -->
@@ -20,73 +30,88 @@
 
 ---
 
-# What is a game?
-
-* A challenge
-* Rules and limitations
-* Allowed ways and means
-* Progress and mastery
-* Social recognition
-
----
-
 # How a game works: Snake & Ladder
 
-1. **Challenge:** Roll dice to move 1 to 100
-2. **Rules & Limits:** Dice number = only allowed move; snake mouth sends you to tail
-3. **Ways & Means:** Bottom of ladder takes you to top; land on player = back to start
-4. **Progress & Mastery:** Keep retrying to reach 100
-5. **Social Recognition:** Friends calling you super at Snake & Ladder
-
----
-
-# Why the game works
-
-1. **Chance factor:** Variable outcome (rolling dice)
-2. **Surprises:** Snake bite vs. ladder climb
-3. **Social factor:** Play together, send others back
+1. **Defined challenge:** 
+    * Roll dice to move 1 to 100
+2. **Rules & Limits:** 
+    * Dice number = only allowed move
+    * Snake mouth sends you to tail
+3. **Ways & Means:** 
+    * Bottom of ladder takes you to top
+    * Land on player = back to start
+4. **Progress & Mastery:** 
+    * Keep retrying to reach 100
+    * Study others statergies & adopt
+5. **Social Recognition:** 
+    * You are 1sr/2nd/3rd of the four players
+    * You partner with other to defeat remaining
+<!-- align: middle-right -->
+<!-- fit: contain -->
+    ![Snake and Ladder](assets/images/snake-ladder.jpg)
 
 ---
 
 # Latent psychology in real life
 
-1. **Chance factor:** Finding food/prey vs. going hungry
-2. **Surprises:** Getting eaten by lion/wolf vs. finding tasty food
-3. **Social factor:** Fighting on a board instead of physical fight
+1. **Chance factor:** 
+    * *In Game:* Variable outcome (rolling dice)
+    * *Real Life:* Finding job that pays for food vs. going hungry
+2. **Surprises:** 
+    * *In Game:* Snake bite vs. ladder climb
+    * *Real Life:* Getting killed by Corona vs. Becoming body builder
+3. **Social factor:** 
+    * *In Game:* Play together. Defeat other.
+    * *Real Life:* Gang up steal mangoes. Be the richest person.
 
+## Stronger relatability -> more engaged in game
+<!-- align: middle-right -->
+<!-- fit: contain -->
+ ![Real scenario](assets/images/real-scenario.png)
 ---
-
-# Real-life connections in games
-
-* **Board:** Walk across jungle / climbing a mountain
-* **Ladder:** Reaching for the cookie jar on top shelf
-* **Snake bite:** Fear of dying or losing a limb
-* Hardwired into human instincts
-
----
-
-# Why it fails in some contexts
-
-* Snake bites are rare in cities
-* Never crossed a jungle or climbed a hill
-
----
-
+<!-- type: title-card -->
 # Can we take this essence to build a modern game?
+## Any examples?
 
-* Any examples?
-
+---
+<!-- type: full-media -->
+<!-- align: top-right -->
+# Subway Surfers
+![Subway Surfers](https://www.youtube.com/watch?v=-TRq2Lb96hg&t=35)
 ---
 <!-- type: full-media -->
 <!-- align: top-right -->
 # Super Mario
 
-![Super Mario](https://www.youtube.com/watch?v=c-prVcCiVOg&t=60)
+![Super Mario](https://www.youtube.com/watch?v=c-prVcCiVOg&t=67)
 ---
-<!-- type: full-media -->
-<!-- align: top-right -->
-# Subway Surfers
-![Subway Surfers](https://www.youtube.com/watch?v=-TRq2Lb96hg&t=30)
+
+# Why it fails in some contexts
+
+* I dont relate to those feeling in real life
+* I dont beliving chance of dice.
+* I dont like surprises.
+* I dont rely on games social factor.
+
+## Thats why all plers dont play all games
+---
+<!-- type: cards-grid:column 5 -->
+# Game genres
+* Action, (assets/images/game-icons/action.png)
+* board-fantacy, (assets/images/game-icons/board-fantacy.png)
+* board-realword-system, (assets/images/game-icons/board-realword-system.png)
+* card, (assets/images/game-icons/card.png)
+* casino, (assets/images/game-icons/casino.png)
+* educational, (assets/images/game-icons/educational.png)
+* farm, (assets/images/game-icons/farm.png)
+* kids, (assets/images/game-icons/kids.png)
+* mmorpg, (assets/images/game-icons/mmorpg.png)
+* open-world, (assets/images/game-icons/open-world.png)
+* quiz, (assets/images/game-icons/quiz.png)
+* racing, (assets/images/game-icons/racing.png)
+* slot, (assets/images/game-icons/slot.png)
+* sports, (assets/images/game-icons/sports.png)
+* statergy, (assets/images/game-icons/statergy.png)
 
 ---
 
@@ -94,7 +119,7 @@
 
 * **Human Tasks**
 * **AI Tasks**
-* **Human Tasks**
+* **Human Refinement**
 
 ---
 
@@ -108,7 +133,7 @@
 **AI Helpers:**
 * Feed learnings into AI to get them formatted and crisped up
 
-**Human Tasks:**
+**Human Refinement:**
 * Filter/modify AI output to meet expectations
 * Create analysis presentations
 
@@ -122,7 +147,7 @@
 **AI Helpers:**
 * Feed moodboards into AI; generate draft art, animation, music
 
-**Human Tasks:**
+**Human Refinement:**
 * Share with team and players; reprompt AI for variations
 * Create final moodboards
 
@@ -138,7 +163,7 @@
 **AI Helpers:**
 * Create assets, program game logic, write game code
 
-**Human Tasks:**
+**Human Refinement:**
 * Refine AI assets; test UX and player flow; iterate with AI
 
 ---

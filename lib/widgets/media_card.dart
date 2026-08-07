@@ -46,17 +46,16 @@ class MediaCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewport = ref.watch(viewportSettingsProvider);
     final baseUiSize = viewport.getBaseUiSize(context);
-
     final screenSize = MediaQuery.of(context).size;
-    final scaledMediaWidth = (media.widthFactor ?? 0.30) * viewport.mediaScale;
-    final scaledMediaHeight = (media.heightFactor ?? 0.45) * viewport.mediaScale;
 
-    final cardWidth = screenSize.width * scaledMediaWidth.clamp(0.15, 0.80);
-    final cardHeight = screenSize.height * scaledMediaHeight.clamp(0.20, 0.85);
+    final double targetHeight = screenSize.height * ((media.heightFactor ?? 0.70) * viewport.mediaScale).clamp(0.20, 0.85);
+    final double targetWidth = media.aspectRatio != null 
+        ? targetHeight * media.aspectRatio!
+        : screenSize.width * ((media.widthFactor ?? 0.30) * viewport.mediaScale).clamp(0.15, 0.80);
 
     return Container(
-      width: cardWidth,
-      height: cardHeight,
+      width: targetWidth,
+      height: targetHeight,
       decoration: BoxDecoration(
         color: const Color(0xFF121620),
         borderRadius: BorderRadius.circular(12 * viewport.unifiedZoom),

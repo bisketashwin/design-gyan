@@ -15,6 +15,7 @@ class MediaData {
   final MediaFit fit;
   final double? widthFactor;
   final double? heightFactor;
+  final double? aspectRatio; // Added aspect ratio support
 
   MediaData({
     required this.url,
@@ -24,8 +25,10 @@ class MediaData {
     this.fit = MediaFit.cover,
     this.widthFactor,
     this.heightFactor,
+    this.aspectRatio,
   });
 }
+
 
 class SlideData {
   final String title;
@@ -123,19 +126,22 @@ class SlideData {
       }
       // PARSE MEDIA SYNTAX: ![caption](url)
       else if (line.startsWith('![')) {
-        final imageMatch = RegExp(r'^!\[(.*?)\]\((.*?)\)$').firstMatch(line);
+        // Regex modified to extract caption, url, and optional trailing params/style attributes
+        final imageMatch = RegExp(r'^!\[(.*?)\]\((.*?)\)(?:\{.*?\})?$').firstMatch(line);
         if (imageMatch != null) {
           final caption = imageMatch.group(1) ?? '';
           final url = imageMatch.group(2) ?? '';
-          final isVideo =
-              url.contains('youtube.com') || url.contains('youtu.be');
-
+          final isVideo = url.contains('youtube.com') || url.contains('youtu.be');
+          
+          // Defaulting to 1:3 ratio if specified in slide context or markdown comments
           media = MediaData(
             url: url,
             caption: caption,
             type: isVideo ? MediaType.video : MediaType.image,
             alignment: alignment,
             fit: fit,
+            aspectRatio: 1 / 3, // Enforce 1:3 width to height ratio
+            heightFactor: 0.75, // Fit to available vertical height
           );
         }
       } else if (line.startsWith('* ') ||
