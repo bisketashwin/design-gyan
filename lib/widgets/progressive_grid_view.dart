@@ -28,6 +28,9 @@ class ProgressiveGridView extends ConsumerWidget {
 
     final horizontalPadding = 80.0 * viewport.unifiedZoom;
     final verticalPadding = 50.0 * viewport.unifiedZoom;
+    final effectiveTitle = slide.title.trim().isNotEmpty 
+        ? slide.title 
+        : (gridData.title.isNotEmpty ? gridData.title : 'UNTITLED');
 
     return Stack(
       children: [
@@ -40,45 +43,54 @@ class ProgressiveGridView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Header showing correctly via SlideHeader
+              // 1. Header
               SlideHeader(
-                title: slide.title,
+                title: effectiveTitle,
                 subtitle: slide.subtitle,
                 visibleStepCount: visibleStepCount,
-              ),
+              ),  
               SizedBox(height: 28 * viewport.unifiedZoom),
+
+              // 2. Main Content Area
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final totalWidth = constraints.maxWidth;
-                      final columns = gridData.columns.clamp(1, 12);
-                      const double spacing = 16.0;
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final totalWidth = constraints.maxWidth;
+                    final columns = gridData.columns.clamp(1, 12);
+                    const double spacing = 16.0;
 
-                      // 4. Width option (Calculated percentage per column minus gaps)
-                      final cardWidth =
-                          (totalWidth - ((columns - 1) * spacing)) / columns;
+                    final double computedFallbackWidth =
+                        (totalWidth - ((columns - 1) * spacing)) / columns;
 
-                      return Wrap(
-                        spacing: spacing,
-                        runSpacing: spacing,
-                        children: gridData.cards.map((card) {
-                          return SizedBox(
-                            width: cardWidth,
-                            // 3. Card wraps height around content naturally
-                            child: ProgressiveCardWidget(
-                              card: card,
-                              currentStep: visibleStepCount,
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
+                    final double cardWidth = gridData.cardWidthPercent != null
+                        ? totalWidth * gridData.cardWidthPercent!
+                        : computedFallbackWidth;
+
+                    return Align(
+                      alignment: Alignment.topLeft,
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Wrap(
+                          spacing: spacing,
+                          runSpacing: spacing,
+                          alignment: WrapAlignment.start,
+                          crossAxisAlignment: WrapCrossAlignment.start,
+                          children: gridData.cards.map((card) {
+                            return SizedBox(
+                              width: cardWidth,
+                              child: ProgressiveCardWidget(
+                                card: card,
+                                currentStep: visibleStepCount,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              SizedBox(height: 80 * viewport.unifiedZoom), // Footer clearance
+              SizedBox(height: 80 * viewport.unifiedZoom),
             ],
           ),
         ),
@@ -102,6 +114,8 @@ class ProgressiveCardWidget extends ConsumerWidget {
     final viewport = ref.watch(viewportSettingsProvider);
     final baseUiSize = viewport.getBaseUiSize(context);
     final bool isCardVisible = currentStep >= card.baseRevealStep;
+    final bool hasHeaderImage =
+        card.imageUrl != null && card.imageUrl!.trim().isNotEmpty;
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 350),
@@ -112,10 +126,11 @@ class ProgressiveCardWidget extends ConsumerWidget {
         curve: Curves.easeOutCubic,
         offset: isCardVisible ? Offset.zero : const Offset(0, 0.05),
         child: Container(
+          width: double.infinity,
           decoration: BoxDecoration(
             color: const Color(0xFF121620),
             borderRadius: BorderRadius.circular(12 * viewport.unifiedZoom),
-            border: Border.all(color: Colors.white12),
+            border: Border.all(color: Colors.white.withOpacity(0.08), width: 1),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black45,
@@ -127,18 +142,19 @@ class ProgressiveCardWidget extends ConsumerWidget {
           child: Padding(
             padding: EdgeInsets.all(16.0 * viewport.unifiedZoom),
             child: Column(
-              mainAxisSize: MainAxisSize.min, // 3. Wrap height content
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (card.imageUrl != null) ...[
-                  // 5. Enforce aspect ratio and visibility logic
+                if (hasHeaderImage) ...[
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8 * viewport.unifiedZoom),
+                    borderRadius:
+                        BorderRadius.circular(8 * viewport.unifiedZoom),
                     child: AspectRatio(
-                      aspectRatio: 16 / 9,
+                      aspectRatio: card.aspectRatio,
                       child: Image.asset(
                         card.imageUrl!,
                         fit: BoxFit.cover,
+                        width: double.infinity,
                         errorBuilder: (_, __, ___) => Container(
                           color: const Color(0xFF1A1F2C),
                           child: const Center(
@@ -154,9 +170,9 @@ class ProgressiveCardWidget extends ConsumerWidget {
                   ),
                   SizedBox(height: 12 * viewport.unifiedZoom),
                 ],
-                // 2. Inherit font sizes and scaling from Viewport
                 Text(
                   card.title.toUpperCase(),
+                  textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: baseUiSize * 1.25 * viewport.textScale,
                     fontWeight: FontWeight.bold,
@@ -214,9 +230,9 @@ class _SubPointItem extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (point.hasImage) ...[
-                      // 5. Enforce ratio & max-bounds on inline media
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(6 * viewport.unifiedZoom),
+                        borderRadius:
+                            BorderRadius.circular(6 * viewport.unifiedZoom),
                         child: AspectRatio(
                           aspectRatio: 16 / 9,
                           child: Image.asset(
@@ -232,7 +248,8 @@ class _SubPointItem extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      if (point.hasText) SizedBox(height: 6 * viewport.unifiedZoom),
+                      if (point.hasText)
+                        SizedBox(height: 6 * viewport.unifiedZoom),
                     ],
                     if (point.hasText)
                       Row(
@@ -250,7 +267,8 @@ class _SubPointItem extends ConsumerWidget {
                               text: MarkdownFormatter.parseInline(
                                 point.text!,
                                 TextStyle(
-                                  fontSize: baseUiSize * 1.05 * viewport.textScale,
+                                  fontSize:
+                                      baseUiSize * 1.05 * viewport.textScale,
                                   height: viewport.lineHeight,
                                   letterSpacing: viewport.letterSpacing,
                                   color: Colors.white70,

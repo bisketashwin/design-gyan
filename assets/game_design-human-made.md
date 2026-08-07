@@ -52,7 +52,7 @@
     ![Snake and Ladder](assets/images/snake-ladder.jpg)
 
 ---
-<!-- type: progressive-grid:3 -->
+<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # Latent psychology in real life
 <!-- card -->
  ### Chance factor:
