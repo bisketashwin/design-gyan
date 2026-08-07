@@ -52,23 +52,26 @@
     ![Snake and Ladder](assets/images/snake-ladder.jpg)
 
 ---
-
+<!-- type: progressive-grid:3 -->
 # Latent psychology in real life
-
-1. **Chance factor:** 
+<!-- card -->
+ ### Chance factor:
+ ![Chance factor](assets/images/reallife-secnario-1.jpg)
+<!-- step: +1 -->
     * *In Game:* Variable outcome (rolling dice)
     * *Real Life:* Finding job that pays for food vs. going hungry
-2. **Surprises:** 
+<!-- card -->
+### Surprises:
+ ![Chance factor](assets/images/reallife-secnario-2.jpg)
+<!-- step: +1 -->
     * *In Game:* Snake bite vs. ladder climb
     * *Real Life:* Getting killed by Corona vs. Becoming body builder
-3. **Social factor:** 
+<!-- card -->
+### Social factor: 
+ ![Chance factor](assets/images/reallife-secnario-3.jpg)
+<!-- step: +1 -->
     * *In Game:* Play together. Defeat other.
     * *Real Life:* Gang up steal mangoes. Be the richest person.
-
-## Stronger relatability -> more engaged in game
-<!-- align: middle-right -->
-<!-- fit: contain -->
- ![Real scenario](assets/images/real-scenario.png)
 ---
 <!-- type: title-card -->
 # Can we take this essence to build a modern game?

@@ -186,6 +186,12 @@ class PresentationNotifier extends Notifier<PresentationState> {
   }
 
   int _getStepCountForSlide(SlideData slide) {
+    if (slide.type == SlideType.progressiveGrid &&
+        slide.progressiveGridData != null) {
+      return slide
+          .progressiveGridData!
+          .maxSteps; 
+    }
     return 1 +
         (slide.subtitle != null ? 1 : 0) +
         slide.callouts.length +

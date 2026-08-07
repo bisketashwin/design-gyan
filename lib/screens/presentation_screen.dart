@@ -2,6 +2,7 @@
 
 import 'package:design_gyan/commons/values.dart';
 import 'package:design_gyan/widgets/full_media_slide_view.dart';
+import 'package:design_gyan/widgets/progressive_grid_view.dart';
 import 'package:design_gyan/widgets/standard_slide.dart';
 import 'package:design_gyan/widgets/view_port_settings_dialogue/widgets/grid_slide_view.dart';
 import 'package:design_gyan/widgets/view_port_settings_dialogue/widgets/slide_end_indicator.dart';
@@ -79,6 +80,12 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
               else if (slide.type == SlideType.titleCard)
                 TitleCardSlideView(
                   key: ValueKey('title_${state.currentSlideIndex}'),
+                  slide: slide,
+                  visibleStepCount: state.visibleStepCount,
+                )
+              else if (slide.type == SlideType.progressiveGrid)
+                ProgressiveGridView(
+                  key: ValueKey('progressive_grid_${state.currentSlideIndex}'),
                   slide: slide,
                   visibleStepCount: state.visibleStepCount,
                 )
