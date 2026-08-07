@@ -17,7 +17,8 @@
 ---
 
 # What is a game?
-
+<!-- mode: inline ratio:3:1 height:20% -->
+![Wide Game Diagram](assets/images/aspects-of-game.jpg)
 * Defined challenge
 * Rules & limitations
 * Allowed ways & means
