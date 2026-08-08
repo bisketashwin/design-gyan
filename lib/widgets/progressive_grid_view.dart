@@ -47,7 +47,6 @@ class ProgressiveGridView extends ConsumerWidget {
               SlideHeader(
                 title: effectiveTitle,
                 subtitle: slide.subtitle,
-                visibleStepCount: visibleStepCount,
               ),  
               SizedBox(height: 28 * viewport.unifiedZoom),
 

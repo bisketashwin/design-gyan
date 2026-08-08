@@ -1,47 +1,45 @@
 import 'dart:async';
-import 'package:web/web.dart' as web;
 import 'package:design_gyan/providers/viewport_setting_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/slide_data.dart';
 import '../commons/values.dart';
 import 'presentation_state.dart';
 
+
 final presentationProvider =
-    NotifierProvider<PresentationNotifier, PresentationState>(
+    AsyncNotifierProvider<PresentationNotifier, PresentationState>(
   PresentationNotifier.new,
 );
 
-class PresentationNotifier extends Notifier<PresentationState> {
+class PresentationNotifier extends AsyncNotifier<PresentationState> {
   Timer? _frictionTimer;
   final int startingStepIndex = 1;
 
   @override
-  PresentationState build() {
+  Future<PresentationState> build() async {
     ref.onDispose(() => _frictionTimer?.cancel());
-    _loadMarkdownSlides();
-    return const PresentationState();
+
+    final slides = await _loadMarkdownSlides();
+
+    return PresentationState(
+      slides: slides,
+      isLoading: false,
+      visibleStepCount: startingStepIndex,
+    );
   }
 
-  void toggleFullscreen() {
-    if (kIsWeb) {
-      final document = web.document;
-      if (document.fullscreenElement == null) {
-        document.documentElement?.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    } else {
-      // Native state toggle
-      state = state.copyWith(isFullscreen: !state.isFullscreen);
-      SystemChrome.setEnabledSystemUIMode(
-        state.isFullscreen ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
-      );
-    }
+  /// Helper to safely retrieve current PresentationState from AsyncValue
+  PresentationState? get _currentState => state.asData?.value;
+
+  /// Helper to safely update PresentationState
+  void _updateState(PresentationState Function(PresentationState current) transform) {
+    final current = _currentState;
+    if (current == null) return;
+    state = AsyncData(transform(current));
   }
 
-  Future<void> _loadMarkdownSlides() async {
+  Future<List<SlideData>> _loadMarkdownSlides() async {
     try {
       final String rawMd =
           await rootBundle.loadString('assets/game_design-human-made.md');
@@ -52,110 +50,154 @@ class PresentationNotifier extends Notifier<PresentationState> {
           .where((slide) => slide.title.isNotEmpty || slide.items.isNotEmpty)
           .toList();
 
-      state = state.copyWith(
-        slides: parsedSlides,
-        isLoading: false,
-        visibleStepCount: startingStepIndex,
-      );
-    } catch (_) {
-      state = state.copyWith(isLoading: false);
+      List<SlideType> slideTypes = parsedSlides.map((s) => s.type).toList();
+      print('slideTypes ${slideTypes.toString()}');
+
+      return parsedSlides;
+    } catch (e) {
+      print('Failed to load slides: $e');
+      return [];
     }
   }
 
+  void toggleFullscreen() {
+    final s = _currentState;
+    if (s == null) return;
+
+    final newFullscreenState = !s.isFullscreen;
+
+    _updateState((current) => current.copyWith(isFullscreen: newFullscreenState));
+
+    SystemChrome.setEnabledSystemUIMode(
+      newFullscreenState ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
+    );
+  }
+
   void nextStep() {
-    if (state.currentSlide?.type == SlideType.fullMedia) {
+    final s = _currentState;
+    if (s == null) return;
+
+    if (s.currentSlide?.type == SlideType.fullMedia) {
       _handleTerminalStepFriction();
       return;
     }
 
-    if (state.visibleStepCount < state.totalStepCount) {
-      final nextStep = state.visibleStepCount + 1;
-      final reachedEnd = nextStep >= state.totalStepCount;
+    if (s.visibleStepCount < s.totalStepCount) {
+      final nextStepIndex = s.visibleStepCount + 1;
+      final reachedEnd = nextStepIndex >= s.totalStepCount;
 
-      state = state.copyWith(
-        visibleStepCount: nextStep,
-        isAtSlideEnd:
-            reachedEnd && state.currentSlideIndex < state.slides.length - 1,
-      );
-    } else if (state.currentSlideIndex < state.slides.length - 1) {
+      _updateState((current) => current.copyWith(
+            visibleStepCount: nextStepIndex,
+            isAtSlideEnd:
+                reachedEnd && current.currentSlideIndex < current.slides.length - 1,
+          ));
+    } else if (s.currentSlideIndex < s.slides.length - 1) {
       _handleTerminalStepFriction();
     }
   }
 
   void _handleTerminalStepFriction() {
+    final s = _currentState;
+    if (s == null) return;
+
     final viewportState = ref.read(viewportSettingsProvider);
     final int frictionTimeoutDuration =
         viewportState.isFrictionEnabled ? 500 : 1500;
 
-    if (state.isAtSlideEnd &&
+    if (s.isAtSlideEnd &&
         _frictionTimer != null &&
         _frictionTimer!.isActive) {
       _frictionTimer?.cancel();
-      _setCurrentSlideIndex(state.currentSlideIndex + 1);
+      _setCurrentSlideIndex(s.currentSlideIndex + 1);
     } else {
-      state = state.copyWith(isAtSlideEnd: true);
+      _updateState((current) => current.copyWith(isAtSlideEnd: true));
       _frictionTimer?.cancel();
       _frictionTimer =
           Timer(Duration(milliseconds: frictionTimeoutDuration), () {
-        state = state.copyWith(isAtSlideEnd: false);
+        _updateState((current) => current.copyWith(isAtSlideEnd: false));
       });
     }
   }
 
   void previousStep() {
+    final s = _currentState;
+    if (s == null) return;
+
     _frictionTimer?.cancel();
 
-    if (state.isAtSlideEnd) {
-      state = state.copyWith(isAtSlideEnd: false);
+    if (s.isAtSlideEnd) {
+      _updateState((current) => current.copyWith(isAtSlideEnd: false));
       return;
     }
 
-    if (state.currentSlide?.type == SlideType.fullMedia) {
+    if (s.currentSlide?.type == SlideType.fullMedia) {
       previousSlideDirect();
       return;
     }
 
-    if (state.visibleStepCount > 1) {
-      state = state.copyWith(visibleStepCount: state.visibleStepCount - 1);
-    } else if (state.currentSlideIndex > 0) {
-      _setCurrentSlideIndex(state.currentSlideIndex - 1);
+    if (s.visibleStepCount > 1) {
+      _updateState((current) => current.copyWith(visibleStepCount: current.visibleStepCount - 1));
+    } else if (s.currentSlideIndex > 0) {
+      _setCurrentSlideIndex(s.currentSlideIndex - 1);
     }
   }
 
   void _setCurrentSlideIndex(int newIndex, {int? targetVisibleSteps}) {
-    if (newIndex >= 0 && newIndex < state.slides.length) {
-      state = state.copyWith(
-        currentSlideIndex: newIndex,
-        visibleStepCount: targetVisibleSteps ?? startingStepIndex,
-        isAtSlideEnd: false,
-      );
+    final s = _currentState;
+    if (s == null) return;
+
+    if (newIndex >= 0 && newIndex < s.slides.length) {
+      _updateState((current) => current.copyWith(
+            currentSlideIndex: newIndex,
+            visibleStepCount: targetVisibleSteps ?? startingStepIndex,
+            isAtSlideEnd: false,
+          ));
       onSlideEnter();
     }
   }
 
   void goToFirst() => _setCurrentSlideIndex(0);
 
-  void goToLast() => _setCurrentSlideIndex(state.slides.length - 1);
-
-  void goToSlide(int index) => _goToSlideFullyRevealed(index);
-
-  void nextSlideDirect() =>
-      _goToSlideFullyRevealed(state.currentSlideIndex + 1);
-
-  void previousSlideDirect() =>
-      _goToSlideFullyRevealed(state.currentSlideIndex - 1);
-
-  void _goToSlideFullyRevealed(int index) {
-    if (index >= 0 && index < state.slides.length) {
-      final targetSlide = state.slides[index];
-      final totalSteps = _getStepCountForSlide(targetSlide);
-      _setCurrentSlideIndex(index, targetVisibleSteps: totalSteps);
+  void goToLast() {
+    final s = _currentState;
+    if (s != null && s.slides.isNotEmpty) {
+      _setCurrentSlideIndex(s.slides.length - 1);
     }
   }
 
+  void goToSlide(int index) => _goToSlideFullyRevealed(index);
+
+void nextSlideDirect() {
+  final s = _currentState;
+  if (s != null && s.currentSlideIndex < s.slides.length - 1) {
+    _setCurrentSlideIndex(s.currentSlideIndex + 1);
+  }
+}
+
+void previousSlideDirect() {
+  final s = _currentState;
+  if (s != null && s.currentSlideIndex > 0) {
+    _setCurrentSlideIndex(s.currentSlideIndex - 1);
+  }
+}
+
+void _goToSlideFullyRevealed(int index) {
+  final s = _currentState;
+  if (s == null) return;
+  if (index >= 0 && index < s.slides.length) {
+    final targetSlide = s.slides[index];
+    _setCurrentSlideIndex(
+      index,
+      targetVisibleSteps: targetSlide.totalStepCount,
+    );
+  }
+}
+
+  
+
   void onSlideEnter() {
-    final slide = state.currentSlide;
-    if (slide == null) return;
+    final s = _currentState;
+    if (s?.currentSlide == null) return;
 
     // Trigger audio playback or other slide-enter side effects here
   }
@@ -183,19 +225,5 @@ class PresentationNotifier extends Notifier<PresentationState> {
     } else if (key == LogicalKeyboardKey.end) {
       goToLast();
     }
-  }
-
-  int _getStepCountForSlide(SlideData slide) {
-    if (slide.type == SlideType.progressiveGrid &&
-        slide.progressiveGridData != null) {
-      return slide
-          .progressiveGridData!
-          .maxSteps; 
-    }
-    return 1 +
-        (slide.subtitle != null ? 1 : 0) +
-        slide.callouts.length +
-        slide.items.length +
-        slide.gridItems.length;
   }
 }

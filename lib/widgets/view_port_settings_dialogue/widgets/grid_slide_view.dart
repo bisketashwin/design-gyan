@@ -31,7 +31,6 @@ class GridSlideView extends StatelessWidget {
               SlideHeader(
                 title: slide.title,
                 subtitle: slide.subtitle,
-                visibleStepCount: visibleStepCount,
               ),
               const SizedBox(height: 24),
               Expanded(

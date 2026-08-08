@@ -6,8 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class InlineMediaWidget extends ConsumerWidget {
   final MediaData media;
+  final bool showCaption;
 
-  const InlineMediaWidget({super.key, required this.media});
+  const InlineMediaWidget({super.key, required this.media, this.showCaption = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +59,7 @@ class InlineMediaWidget extends ConsumerWidget {
                 ),
               ),
             ),
-            if (media.caption.isNotEmpty)
+            if (media.caption.isNotEmpty && showCaption)
               Padding(
                 padding: EdgeInsets.only(top: 6.0 * viewport.unifiedZoom),
                 child: Text(

@@ -36,7 +36,36 @@ class MediaData {
 }
 
 /// Abstract representation of sequential content blocks for inline ordering
-abstract class SlideBlockData {}
+abstract class SlideBlockData {
+  final int revealStep;
+  const SlideBlockData({this.revealStep = 0});
+}
+
+/// This would phase out other data types here
+
+class Block {
+  final BlockRole role;
+  final String? text;
+  final String? imageUrl;
+  final String? imageCaption;
+  final int revealStep;
+  final double aspectRatio;
+  final double heightPercent;
+
+  const Block({
+    required this.role,
+    this.text,
+    this.imageUrl,
+    this.imageCaption,
+    required this.revealStep,
+    this.aspectRatio = 1.0,
+    this.heightPercent = 0.20,
+  }) : assert(text != null || imageUrl != null, 'Block needs text, image, or both');
+
+  bool get hasText => text != null && text!.isNotEmpty;
+  bool get hasImage => imageUrl != null && imageUrl!.isNotEmpty;
+  bool get isCompound => hasText && hasImage;
+}
 
 class TextBlockData extends SlideBlockData {
   final String text;
@@ -44,19 +73,19 @@ class TextBlockData extends SlideBlockData {
   final bool isSubheader;
   final bool isListItem;
   final bool isCallout;
-
   TextBlockData({
     required this.text,
     this.isHeader = false,
     this.isSubheader = false,
     this.isListItem = false,
     this.isCallout = false,
+    super.revealStep,
   });
 }
 
 class MediaBlockData extends SlideBlockData {
   final MediaData media;
-  MediaBlockData({required this.media});
+  MediaBlockData({required this.media, super.revealStep});
 }
 
 class SlideData {
@@ -67,7 +96,8 @@ class SlideData {
   final List<GridItemData> gridItems;
   final ProgressiveGridData? progressiveGridData;
   final MediaData? media; // Legacy side media support
-  final List<SlideBlockData> blocks; // Ordered sequential content blocks
+  final List<SlideBlockData> blocks; // legacy — untouched, still used by `standard`
+   final List<Block> contentBlocks;     // new — used only by `standardBlocks`
   final SlideType type;
   final GridDirection gridDirection;
   final int gridCount;
@@ -81,6 +111,7 @@ class SlideData {
     this.progressiveGridData,
     this.media,
     this.blocks = const [],
+    this.contentBlocks = const [],
     this.type = SlideType.standard,
     this.gridDirection = GridDirection.column,
     this.gridCount = 3,
@@ -103,6 +134,26 @@ class SlideData {
     final clean = val.replaceAll('%', '').trim();
     final parsed = double.tryParse(clean) ?? 20.0;
     return (parsed / 100.0).clamp(0.05, 0.80);
+  }
+  
+  int get _blockStepCount => contentBlocks.isEmpty ? 1 : contentBlocks.map((b) => b.revealStep).reduce((a, b) => a > b ? a : b);
+
+  
+  int get totalStepCount {
+    switch (type) {
+      case SlideType.standardBlocks:
+        return _blockStepCount;
+
+      case SlideType.progressiveGrid:
+        return progressiveGridData?.maxSteps ?? 1;
+
+      default:
+        return 1 +
+            (subtitle != null ? 1 : 0) +
+            callouts.length +
+            items.length +
+            gridItems.length;
+    }
   }
   // -------------------------------------------------------------
   // FACTORY CONSTRUCTOR

@@ -1,7 +1,6 @@
 import 'package:design_gyan/commons/values.dart';
 
 import '../models/slide_data.dart';
-
 class PresentationState {
   final List<SlideData> slides;
   final int currentSlideIndex;
@@ -29,19 +28,7 @@ class PresentationState {
     return 1 + (currentSlide!.subtitle != null ? 1 : 0);
   }
 
-  // In lib/providers/presentation_state.dart
-  int get totalStepCount {
-    if (currentSlide == null) return 0;
-    if (currentSlide!.type == SlideType.progressiveGrid &&
-        currentSlide!.progressiveGridData != null) {
-      return currentSlide!.progressiveGridData!.maxSteps;
-    }
-    int steps = headerStepCount;
-    steps += currentSlide!.callouts.length;
-    steps += currentSlide!.items.length;
-    steps += currentSlide!.gridItems.length;
-    return steps;
-  }
+  int get totalStepCount => currentSlide?.totalStepCount ?? 0;
 
   bool get isFullyRevealed => visibleStepCount >= totalStepCount;
 

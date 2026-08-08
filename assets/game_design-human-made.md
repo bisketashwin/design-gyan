@@ -15,7 +15,7 @@
 <!-- type: title-card -->
 # Why do you play games?
 ---
-
+<!-- type: standard-blocks -->
 # What is a game?
 <!-- mode: inline ratio:3:1 height:20% -->
 ![Wide Game Diagram](assets/images/aspects-of-game.jpg)
@@ -30,11 +30,11 @@
 # What is NOT a game?
 
 ---
-
+<!-- type: standard-blocks -->
 # How a game works: Snake & Ladder
 
 1. **Defined challenge:** 
-    * Roll dice to move 1 to 100
+    * Roll dice to move 1 to 100 ![Wide Game Diagram](assets/images/aspects-of-game.jpg){ratio: 3:1 height:20%}
 2. **Rules & Limits:** 
     * Dice number = only allowed move
     * Snake mouth sends you to tail

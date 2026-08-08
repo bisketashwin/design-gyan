@@ -1,33 +1,38 @@
 import 'package:design_gyan/commons/values.dart';
 import 'package:design_gyan/models/slide_data.dart';
 import 'package:design_gyan/utils/progressive_grid_parser.dart';
+import 'package:design_gyan/utils/standard_blocks_parser.dart';
 
 /// Pure parser responsible for converting raw Markdown strings into structured [SlideData].
 class MarkdownSlideParser {
   final ProgressiveGridParser progressiveGridParser;
-  
+
   const MarkdownSlideParser({
     this.progressiveGridParser = const ProgressiveGridParser(),
   });
 
   SlideData parse(String rawMarkdown) {
+    print('raw markdown parsing------------------');
     // ------------------------------------------------------------------------
     // INTERCEPT POINT: Check if rawMarkdown is a multi-line progressive grid.
     // ------------------------------------------------------------------------
-    if (rawMarkdown.contains('progressive-grid') || rawMarkdown.contains('<!-- card -->')) {
+    if (rawMarkdown.contains('type: standard-blocks')) {
+      print('standard block parsing------------------');
+      return const StandardBlocksParser().parse(rawMarkdown);
+    }
+    if (rawMarkdown.contains('progressive-grid') ||
+        rawMarkdown.contains('<!-- card -->')) {
       final progressiveData = progressiveGridParser.parse(rawMarkdown);
 
       // Map ProgressiveGridData model to SlideData's gridItems list
       final List<GridItemData> gridItems = progressiveData.cards.map((card) {
-        return GridItemData(
-          label: card.title,
-          imageUrl: card.imageUrl ?? '',
-        );
+        return GridItemData(label: card.title, imageUrl: card.imageUrl ?? '');
       }).toList();
 
       return SlideData(
         title: progressiveData.title,
-        type: SlideType.progressiveGrid, // FIXED: Assigned progressiveGrid instead of grid
+        type: SlideType
+            .progressiveGrid, // FIXED: Assigned progressiveGrid instead of grid
         gridCount: progressiveData.columns,
         progressiveGridData: progressiveData,
         gridItems: gridItems,
@@ -170,14 +175,20 @@ class MarkdownSlideParser {
     double heightPercent = activeHeightPercent;
     MediaPlacement placement = activePlacement;
 
-    if (content.contains('ratio:') || content.contains('height:') || content.contains('mode:')) {
+    if (content.contains('ratio:') ||
+        content.contains('height:') ||
+        content.contains('mode:')) {
       final normalized = content.replaceAll(RegExp(r':\s+'), ':');
       final parts = normalized.split(RegExp(r'\s+'));
       for (var part in parts) {
         if (part.startsWith('ratio:')) {
-          aspectRatio = SlideData.parseAspectRatio(part.replaceFirst('ratio:', ''));
+          aspectRatio = SlideData.parseAspectRatio(
+            part.replaceFirst('ratio:', ''),
+          );
         } else if (part.startsWith('height:')) {
-          heightPercent = SlideData.parseHeightPercent(part.replaceFirst('height:', ''));
+          heightPercent = SlideData.parseHeightPercent(
+            part.replaceFirst('height:', ''),
+          );
         } else if (part.startsWith('mode:')) {
           placement = part.replaceFirst('mode:', '') == 'inline'
               ? MediaPlacement.inline
@@ -232,7 +243,9 @@ class MarkdownSlideParser {
     required double defaultHeightPercent,
     required MediaPlacement defaultPlacement,
   }) {
-    final imageMatch = RegExp(r'^!\[(.*?)\]\((.*?)\)(?:\{(.*?)\})?$').firstMatch(line);
+    final imageMatch = RegExp(
+      r'^!\[(.*?)\]\((.*?)\)(?:\{(.*?)\})?$',
+    ).firstMatch(line);
     if (imageMatch == null) return null;
 
     final caption = imageMatch.group(1) ?? '';
@@ -247,9 +260,13 @@ class MarkdownSlideParser {
       final attrParts = attributes.split(' ');
       for (var attr in attrParts) {
         if (attr.startsWith('ratio=')) {
-          finalRatio = SlideData.parseAspectRatio(attr.replaceFirst('ratio=', ''));
+          finalRatio = SlideData.parseAspectRatio(
+            attr.replaceFirst('ratio=', ''),
+          );
         } else if (attr.startsWith('height=')) {
-          finalHeightPercent = SlideData.parseHeightPercent(attr.replaceFirst('height=', ''));
+          finalHeightPercent = SlideData.parseHeightPercent(
+            attr.replaceFirst('height=', ''),
+          );
         } else if (attr.startsWith('mode=')) {
           finalPlacement = attr.replaceFirst('mode=', '') == 'inline'
               ? MediaPlacement.inline
@@ -287,10 +304,7 @@ class MarkdownSlideParser {
       final label = gridItemMatch.group(1)?.trim() ?? '';
       final imageUrl = gridItemMatch.group(2)?.trim() ?? '';
 
-      gridItems.add(GridItemData(
-        label: label,
-        imageUrl: imageUrl,
-      ));
+      gridItems.add(GridItemData(label: label, imageUrl: imageUrl));
     } else {
       items.add(cleanLine);
       blocks.add(TextBlockData(text: cleanLine, isListItem: true));
@@ -299,13 +313,20 @@ class MarkdownSlideParser {
 
   CardAlignment _parseAlignment(String alignStr) {
     switch (alignStr) {
-      case 'top-left': return CardAlignment.topLeft;
-      case 'top-right': return CardAlignment.topRight;
-      case 'middle-left': return CardAlignment.middleLeft;
-      case 'middle-right': return CardAlignment.middleRight;
-      case 'bottom-left': return CardAlignment.bottomLeft;
-      case 'bottom-right': return CardAlignment.bottomRight;
-      default: return CardAlignment.bottomRight;
+      case 'top-left':
+        return CardAlignment.topLeft;
+      case 'top-right':
+        return CardAlignment.topRight;
+      case 'middle-left':
+        return CardAlignment.middleLeft;
+      case 'middle-right':
+        return CardAlignment.middleRight;
+      case 'bottom-left':
+        return CardAlignment.bottomLeft;
+      case 'bottom-right':
+        return CardAlignment.bottomRight;
+      default:
+        return CardAlignment.bottomRight;
     }
   }
 }

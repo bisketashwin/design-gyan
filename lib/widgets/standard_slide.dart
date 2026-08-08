@@ -73,7 +73,6 @@ class StandardSlideView extends ConsumerWidget {
                         SlideHeader(
                           title: slide.title,
                           subtitle: slide.subtitle,
-                          visibleStepCount: visibleStepCount,
                         ),
                         if (slide.callouts.isNotEmpty)
                           SizedBox(height: 28 * viewport.unifiedZoom),

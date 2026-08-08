@@ -15,7 +15,6 @@ class CardParseResult {
     this.cardWidth,
   });
 }
-
 class CardNodeParser {
   const CardNodeParser();
 
@@ -25,12 +24,12 @@ class CardNodeParser {
     _RawCardData? currentRawCard;
     int currentRelativeLevel = 0;
 
-    // Directives extraction defaults
     double slideAspectRatio = fallbackAspectRatio;
     String? cardWidth;
 
     for (var line in lines) {
       final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
 
       if (trimmed.startsWith('# ')) {
         title = trimmed.replaceFirst('# ', '').trim();
@@ -38,8 +37,8 @@ class CardNodeParser {
       }
 
       if (trimmed.startsWith('<!--')) {
-        // Parse slide-level aspect ratio (e.g., <!-- aspect-ratio: 1:1 --> or <!-- aspect-ratio: 1.777 -->)
-        final arMatch = RegExp(r'<!--\s*aspect-ratio:\s*([0-9\.:]+)\s*-->').firstMatch(trimmed);
+        // 1. Extract aspect ratio (e.g. aspect-ratio: 1:1)
+        final arMatch = RegExp(r'aspect-ratio:\s*([0-9\.:]+)').firstMatch(trimmed);
         if (arMatch != null) {
           final val = arMatch.group(1)!;
           if (val.contains(':')) {
@@ -54,15 +53,15 @@ class CardNodeParser {
           }
         }
 
-        // Parse custom card width override (e.g., <!-- card-width: 15% -->)
-        final widthMatch = RegExp(r'<!--\s*card-width:\s*([^->]+)\s*-->').firstMatch(trimmed);
+        // 2. Extract card width (e.g. card-width: 25%)
+        final widthMatch = RegExp(r'card-width:\s*([^-\s>]+)').firstMatch(trimmed);
         if (widthMatch != null) {
           cardWidth = widthMatch.group(1)!.trim();
         }
 
-        // Parse relative step tags (<!-- step: +1 -->) or absolute tags (<!-- step: 1 -->)
-        final relMatch = RegExp(r'<!--\s*step:\s*\+(\d+)\s*-->').firstMatch(trimmed);
-        final absMatch = RegExp(r'<!--\s*step:\s*(\d+)\s*-->').firstMatch(trimmed);
+        // 3. Extract step tags (<!-- step: +1 --> or <!-- step: 1 -->)
+        final relMatch = RegExp(r'step:\s*\+(\d+)').firstMatch(trimmed);
+        final absMatch = RegExp(r'step:\s*(\d+)').firstMatch(trimmed);
 
         if (relMatch != null) {
           currentRelativeLevel = int.parse(relMatch.group(1)!);
@@ -70,15 +69,17 @@ class CardNodeParser {
           currentRelativeLevel = int.parse(absMatch.group(1)!);
         }
 
-        // Detect card boundary
+        // 4. Card boundary marker (<!-- card -->)
         final cardDirective = RegExp(r'<!--\s*card(?::\d+)?\s*-->').firstMatch(trimmed);
         if (cardDirective != null) {
           if (currentRawCard != null) {
             rawCards.add(currentRawCard);
           }
-          currentRelativeLevel = 0; // Reset relative level per card
+          currentRelativeLevel = 0; // Reset relative step counter for new card
           currentRawCard = _RawCardData(subPoints: []);
         }
+
+        // Pass-through: ignore inline/mode directives without dropping execution context
         continue;
       }
 
@@ -89,7 +90,8 @@ class CardNodeParser {
         continue;
       }
 
-      if (trimmed.startsWith('![')) {
+      // Card main image (appears before any step markers)
+      if (trimmed.startsWith('![') && currentRawCard.subPoints.isEmpty && currentRelativeLevel == 0) {
         final imgMatch = RegExp(r'!\[.*?\]\((.*?)\)').firstMatch(trimmed);
         if (imgMatch != null) {
           currentRawCard.imageUrl = imgMatch.group(1);
@@ -97,20 +99,23 @@ class CardNodeParser {
         continue;
       }
 
-      if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
-        final rawText = trimmed.substring(2).trim();
+      // Handles step items: bullet points (*, -) OR standalone image tags (![...])
+      if (trimmed.startsWith('![') || trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
         String? subImgUrl;
-        String cleanText = rawText;
+        String? cleanText;
 
-        final subImgMatch = RegExp(r'!\[.*?\]\((.*?)\)').firstMatch(rawText);
-        if (subImgMatch != null) {
-          subImgUrl = subImgMatch.group(1);
-          cleanText = rawText.replaceAll(subImgMatch.group(0)!, '').trim();
+        final imgMatch = RegExp(r'!\[.*?\]\((.*?)\)').firstMatch(trimmed);
+        if (imgMatch != null) {
+          subImgUrl = imgMatch.group(1);
+          final textWithoutImg = trimmed.replaceAll(imgMatch.group(0)!, '').trim();
+          cleanText = textWithoutImg.replaceFirst(RegExp(r'^[\*\-]\s*'), '').trim();
+        } else {
+          cleanText = trimmed.replaceFirst(RegExp(r'^[\*\-]\s*'), '').trim();
         }
 
         currentRawCard.subPoints.add(
           _RawSubPoint(
-            text: cleanText.isNotEmpty ? cleanText : null,
+            text: (cleanText != null && cleanText.isNotEmpty) ? cleanText : null,
             imageUrl: subImgUrl,
             relativeLevel: currentRelativeLevel,
           ),
@@ -125,7 +130,7 @@ class CardNodeParser {
     final int totalCards = rawCards.length;
     int maxCalculatedStep = totalCards > 0 ? totalCards : 1;
 
-    // PASS 2: Calculate round-robin steps preserving explicit aspect ratio and card width
+    // Pass 2: Round-robin relative step mapping
     final List<CardPointNode> finalCards = [];
 
     for (int cIndex = 0; cIndex < totalCards; cIndex++) {
@@ -151,8 +156,8 @@ class CardNodeParser {
           title: raw.title,
           imageUrl: raw.imageUrl,
           baseRevealStep: cardIndexNumber,
-          aspectRatio: slideAspectRatio, // Preserved custom aspect ratio (e.g. 1.0)
-          cardWidth: cardWidth,           // Preserved custom width string (e.g. "15%")
+          aspectRatio: slideAspectRatio,
+          cardWidth: cardWidth,
           subPoints: finalSubPoints,
         ),
       );
