@@ -17,8 +17,7 @@
 ---
 <!-- type: standard-blocks -->
 # What is a game?
-<!-- mode: inline ratio:3:1 height:20% -->
-![Wide Game Diagram](assets/images/aspects-of-game.jpg)
+![Wide Game Diagram](assets/images/aspects-of-game.jpg){ratio: 3:1 height:20%}
 * Defined challenge
 * Rules & limitations
 * Allowed ways & means
@@ -31,6 +30,8 @@
 
 ---
 <!-- type: standard-blocks -->
+<!-- floating-media: align=middle-right ratio=1:2.5 -->
+![Snake and Ladder](assets/images/snake-ladder.jpg)
 # How a game works: Snake & Ladder
 
 1. **Defined challenge:** 
@@ -47,9 +48,7 @@
 5. **Social Recognition:** 
     * You are 1sr/2nd/3rd of the four players
     * You partner with other to defeat remaining
-<!-- align: middle-right -->
-<!-- fit: contain -->
-    ![Snake and Ladder](assets/images/snake-ladder.jpg)
+
 
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->

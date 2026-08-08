@@ -1,10 +1,24 @@
 import 'package:design_gyan/commons/values.dart';
 import 'package:design_gyan/models/slide_data.dart';
+import 'package:design_gyan/models/floating_media.dart'; // <-- Add this import
 
 class StandardBlocksParser {
   const StandardBlocksParser();
 
   SlideData parse(String rawMarkdown) {
+    // 1. Extract and remove the floating media block first
+    FloatingMedia? floatingMedia = parseFloatingMedia(rawMarkdown);
+    if (floatingMedia != null) {
+      // Remove the matched text from the raw markdown so it doesn't get parsed as a standard block
+      // Note: Make sure the regex in floating_media.dart is accessible here
+      final regex = RegExp(
+        r'<!--\s*floating-media:\s*(.*?)\s*-->\s*\n\s*!\[(.*?)\]\((.*?)\)',
+        multiLine: true,
+      );
+      rawMarkdown = rawMarkdown.replaceFirst(regex, '');
+    }
+
+    // 2. Proceed with standard line-by-line parsing
     final lines = rawMarkdown.replaceAll('\r\n', '\n').split('\n');
     String title = '';
     String? subtitle;
@@ -31,7 +45,7 @@ class StandardBlocksParser {
             }
           }
         }
-        continue; // Ensures single-line comment is fully consumed cleanly!
+        continue; 
       }
 
       // Multi-line comment boundary checks
@@ -71,11 +85,11 @@ class StandardBlocksParser {
       items: const [],
       contentBlocks: blocks,
       type: SlideType.standardBlocks,
+      floatingMedia: floatingMedia, // <-- Assign the extracted media here
     );
   }
 
   /// Parses one markdown line into its role + optional text + optional image.
-  /// Pure — no step-cursor state, so it's trivially unit-testable line by line.
   _ParsedLine? _parseLine(String trimmed, double defaultAspectRatio, double defaultHeightPercent) {
     String content = trimmed;
     BlockRole role;
@@ -98,7 +112,7 @@ class StandardBlocksParser {
       role = BlockRole.bullet;
       content = content.replaceFirst(RegExp(r'^([\*\-]|(\d+\.))\s+'), '');
     } else if (content.startsWith('![')) {
-      role = BlockRole.bullet; // a bare image line is still a bullet-level block
+      role = BlockRole.bullet;
     } else {
       return null;
     }
@@ -132,7 +146,7 @@ class StandardBlocksParser {
       text = leftover.isEmpty ? null : leftover;
     }
 
-    if (text == null && imageUrl == null) return null; // nothing usable on this line
+    if (text == null && imageUrl == null) return null;
 
     return _ParsedLine(
       role: role,

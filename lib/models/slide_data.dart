@@ -1,4 +1,5 @@
 import 'package:design_gyan/commons/values.dart';
+import 'package:design_gyan/models/floating_media.dart';
 import 'package:design_gyan/models/progressive_grid_models.dart';
 import 'package:design_gyan/utils/markdown_slide_parser.dart';
 
@@ -97,10 +98,11 @@ class SlideData {
   final ProgressiveGridData? progressiveGridData;
   final MediaData? media; // Legacy side media support
   final List<SlideBlockData> blocks; // legacy — untouched, still used by `standard`
-   final List<Block> contentBlocks;     // new — used only by `standardBlocks`
+  final List<Block> contentBlocks;     // new — used only by `standardBlocks`
   final SlideType type;
   final GridDirection gridDirection;
   final int gridCount;
+  final FloatingMedia? floatingMedia;
 
   SlideData({
     required this.title,
@@ -115,6 +117,7 @@ class SlideData {
     this.type = SlideType.standard,
     this.gridDirection = GridDirection.column,
     this.gridCount = 3,
+    this.floatingMedia,
   });
 
   // -------------------------------------------------------------

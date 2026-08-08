@@ -85,17 +85,18 @@ class _StandardBlocksBodyState extends State<StandardBlocksBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (var index = 0; index < widget.blocks.length; index++)
-              _buildBlock(index),
-          ],
-        ),
+    // REMOVED the redundant Expanded wrapper here since the parent Row already handles flex bounds.
+    return SingleChildScrollView(
+      controller: _scrollController,
+      physics: const BouncingScrollPhysics(),
+      // ADDED: Bottom padding to give clearance for the final list item
+      padding: const EdgeInsets.only(bottom: 100.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var index = 0; index < widget.blocks.length; index++)
+            _buildBlock(index),
+        ],
       ),
     );
   }
