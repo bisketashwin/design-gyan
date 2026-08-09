@@ -11,7 +11,7 @@ class GridItemData {
 }
 
 class MediaData {
-  final String url;
+  final String rawUrl;
   final String caption;
   final MediaType type;
   final CardAlignment alignment;
@@ -23,7 +23,7 @@ class MediaData {
   final MediaPlacement placement;
 
   MediaData({
-    required this.url,
+    required String url,
     required this.caption,
     required this.type,
     this.alignment = CardAlignment.bottomRight,
@@ -33,7 +33,22 @@ class MediaData {
     this.aspectRatio = 1.0,
     this.heightPercent = 0.20, // Default 20% max height for inline
     this.placement = MediaPlacement.sideCard,
-  });
+  }): rawUrl = url;
+
+  bool get isNetwork => rawUrl.startsWith('http://') || rawUrl.startsWith('https://');
+
+  String get url {
+    if (isNetwork) return rawUrl;
+    
+    var path = rawUrl.trim();
+    if (path.startsWith('assets/')) {
+      return path.substring('assets/'.length);
+    } else if (path.startsWith('/assets/')) {
+      return path.substring('/assets/'.length);
+    }
+    return path;
+  }
+
 }
 
 /// Abstract representation of sequential content blocks for inline ordering

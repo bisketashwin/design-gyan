@@ -199,7 +199,9 @@ class MarkdownSlideParser {
       final typeValue = content.replaceFirst('type:', '').trim();
       if (typeValue == 'full-media') {
         slideType = SlideType.fullMedia;
-      } else if (typeValue == 'title-card') {
+      } else if (typeValue == 'hero-image') {
+        slideType = SlideType.heroImage;
+      }else if (typeValue == 'title-card') {
         slideType = SlideType.titleCard;
       } else if (typeValue.startsWith('cards-grid:')) {
         slideType = SlideType.grid;

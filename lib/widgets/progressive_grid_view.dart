@@ -173,7 +173,7 @@ class ProgressiveCardWidget extends ConsumerWidget {
                   card.title.toUpperCase(),
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    fontSize: baseUiSize * 1.25 * viewport.textScale,
+                    fontSize: baseUiSize * 1.8 * viewport.textScale,
                     fontWeight: FontWeight.bold,
                     letterSpacing: viewport.letterSpacing,
                     color: const Color(0xFFFFB800),
@@ -233,7 +233,7 @@ class _SubPointItem extends ConsumerWidget {
                         borderRadius:
                             BorderRadius.circular(6 * viewport.unifiedZoom),
                         child: AspectRatio(
-                          aspectRatio: 16 / 9,
+                          aspectRatio: 16 / 9, // TODO: access ratio from media
                           child: Image.asset(
                             point.imageUrl!,
                             fit: BoxFit.cover,
@@ -257,7 +257,7 @@ class _SubPointItem extends ConsumerWidget {
                           Text(
                             "⚡ ",
                             style: TextStyle(
-                              fontSize: baseUiSize * 1.0 * viewport.textScale,
+                              fontSize: baseUiSize * 1.5 * viewport.textScale,
                               color: const Color(0xFFFFB800),
                             ),
                           ),
@@ -267,7 +267,7 @@ class _SubPointItem extends ConsumerWidget {
                                 point.text!,
                                 TextStyle(
                                   fontSize:
-                                      baseUiSize * 1.05 * viewport.textScale,
+                                      baseUiSize * 1.5 * viewport.textScale,
                                   height: viewport.lineHeight,
                                   letterSpacing: viewport.letterSpacing,
                                   color: Colors.white70,

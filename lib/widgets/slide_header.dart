@@ -1,7 +1,9 @@
+import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'animators/step_animator.dart';
 
-class SlideHeader extends StatelessWidget {
+class SlideHeader extends ConsumerWidget {
   final String title;
   final String? subtitle;
   final bool isTitleVisible;
@@ -18,7 +20,9 @@ class SlideHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+     final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -28,7 +32,7 @@ class SlideHeader extends StatelessWidget {
           child: Text(
             title.toUpperCase(),
             style: TextStyle(
-              fontSize: baseUi * 2.2,
+              fontSize: baseUiSize * 2.2 * viewport.textScale,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: 1.2,

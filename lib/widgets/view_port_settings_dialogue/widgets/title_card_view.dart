@@ -63,7 +63,7 @@ class TitleCardSlideView extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: baseUiSize * 2.2 * viewport.textScale,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         height: viewport.lineHeight,
                         letterSpacing: (0.5 * viewport.unifiedZoom) + viewport.letterSpacing,
                       ),

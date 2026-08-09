@@ -1,9 +1,11 @@
 import 'package:design_gyan/commons/helpers.dart';
 import 'package:design_gyan/commons/values.dart';
 import 'package:design_gyan/models/slide_data.dart';
+import 'package:design_gyan/providers/viewport_setting_provider.dart';
 import 'package:design_gyan/widgets/animators/step_animator.dart';
 import 'package:design_gyan/widgets/slide_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GridSlideView extends StatelessWidget {
   final SlideData slide;
@@ -119,15 +121,16 @@ class GridSlideView extends StatelessWidget {
   }
 }
 
-class _GridCard extends StatelessWidget {
+class _GridCard extends ConsumerWidget {
   final GridItemData item;
 
   const _GridCard({required this.item});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
     final isNetworkUrl = item.imageUrl.startsWith('http://') || item.imageUrl.startsWith('https://');
-
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF121620),
@@ -167,7 +170,7 @@ class _GridCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.85),
+                color: Colors.black.withValues(alpha: 0.85),
                 border: const Border(
                   top: BorderSide(color: Color(0xFFFFB800), width: 2),
                 ),
@@ -177,8 +180,8 @@ class _GridCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: baseUiSize * 1.2 * viewport.textScale,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   letterSpacing: 1.1,

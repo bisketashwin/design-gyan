@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import '../providers/presentation_provider.dart';
 import '../widgets/presentation_footer.dart';
+import 'package:design_gyan/widgets/hero_image_slide_view.dart';
 
 class PresentationScreen extends ConsumerStatefulWidget {
   const PresentationScreen({super.key});
@@ -176,6 +177,12 @@ class _PresentationScreenState extends ConsumerState<PresentationScreen> {
       case SlideType.fullMedia:
         return FullMediaSlideView(
           key: ValueKey('media_${state.currentSlideIndex}'),
+          slide: slide,
+          visibleStepCount: state.visibleStepCount,
+        );
+      case SlideType.heroImage:
+        return HeroImageSlideView(
+          key: ValueKey('hero_${state.currentSlideIndex}'),
           slide: slide,
           visibleStepCount: state.visibleStepCount,
         );

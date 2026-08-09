@@ -14,6 +14,10 @@
 ---
 <!-- type: title-card -->
 # Why do you play games?
+* ![Stress relief](assets/images/play-to-relax.jpg)
+* ![Connect with Friends](assets/images/play-to-connect.jpg)
+* ![Fantasy fulfillment](assets/images/play-to-fantasize.jpg) 
+
 ---
 <!-- type: standard-blocks -->
 # What is a game?
@@ -34,18 +38,18 @@
 ![Snake and Ladder](assets/images/snake-ladder.jpg)
 # How a game works: Snake & Ladder
 
-1. **Defined challenge:** 
+1. **Defined challenge** 
     * Roll dice to move 1 to 100 ![Wide Game Diagram](assets/images/aspects-of-game.jpg){ratio: 3:1 height:20%}
-2. **Rules & Limits:** 
+2. **Rules & Limits** 
     * Dice number = only allowed move
     * Snake mouth sends you to tail
-3. **Ways & Means:** 
+3. **Ways & Means** 
     * Bottom of ladder takes you to top
     * Land on player = back to start
-4. **Progress & Mastery:** 
+4. **Progress & Mastery** 
     * Keep retrying to reach 100
     * Study others statergies & adopt
-5. **Social Recognition:** 
+5. **Social Recognition** 
     * You are 1sr/2nd/3rd of the four players
     * You partner with other to defeat remaining
 
@@ -54,23 +58,23 @@
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # Latent psychology in real life
 <!-- card -->
- ### Chance factor:
+ ### Chance factor
  ![Chance factor](assets/images/reallife-secnario-1.jpg)
 <!-- step: +1 -->
-    * *In Game:* Variable outcome (rolling dice)
-    * *Real Life:* Finding job that pays for food vs. going hungry
+    * **In Game:** Variable outcome (rolling dice)
+    * **Real Life:** Finding job that pays for food vs. going hungry
 <!-- card -->
-### Surprises:
+### Surprises
  ![Chance factor](assets/images/reallife-secnario-2.jpg)
 <!-- step: +1 -->
-    * *In Game:* Snake bite vs. ladder climb
-    * *Real Life:* Getting killed by Corona vs. Becoming body builder
+    * **In Game:** Snake bite vs. ladder climb
+    * **Real Life:** Getting killed by Corona vs. Becoming body builder
 <!-- card -->
-### Social factor: 
+### Social factor
  ![Chance factor](assets/images/reallife-secnario-3.jpg)
 <!-- step: +1 -->
-    * *In Game:* Play together. Defeat other.
-    * *Real Life:* Gang up steal mangoes. Be the richest person.
+    * **In Game:** Play together. Defeat other.
+    * **Real Life:** Gang up steal mangoes. Be the richest person.
 ---
 <!-- type: title-card -->
 # Can we take this essence to build a modern game?
@@ -88,10 +92,10 @@
 
 ![Super Mario](https://www.youtube.com/watch?v=c-prVcCiVOg&t=67)
 ---
-
+<!-- type: standard-blocks -->
 # Why it fails in some contexts
 
-* I dont relate to those feeling in real life
+* I dont relate to
 * I dont beliving chance of dice.
 * I dont like surprises.
 * I dont rely on games social factor.
@@ -117,7 +121,7 @@
 * statergy, (assets/images/game-icons/statergy.png)
 
 ---
-
+<!-- type: standard-blocks -->
 # AI in game design: 3-tier approach
 
 * **Human Tasks**
@@ -125,54 +129,72 @@
 * **Human Refinement**
 
 ---
+<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 
 # Preproduction
-
-**Human Tasks:**
+<!-- card -->
+### Human Tasks
+![User research](assets/images/game-pre-prod-1.jpg)
+<!-- step: +1 -->
 * Study game factors: strategy, fun, psychology, achievement
 * Study art, animation, VFX, sound/music to enhance factors
 * Study mechanics, rules, level design, storytelling
-
-**AI Helpers:**
+<!-- card -->
+### AI Helpers
+![User research](assets/images/game-pre-prod-2.jpg)
+<!-- step: +1 -->
 * Feed learnings into AI to get them formatted and crisped up
-
-**Human Refinement:**
+<!-- card -->
+### Human Refinement
+![User research](assets/images/game-pre-prod-3.jpg)
+<!-- step: +1 -->
 * Filter/modify AI output to meet expectations
 * Create analysis presentations
 
 ---
-
+<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # Ideation
-
-**Human Tasks:**
+<!-- card -->
+### Human Tasks
+![User research](assets/images/game-ideation-1.jpg)
+<!-- step: +1 -->
 * Brainstorm art, animation, music inspirations; create moodboards
-
-**AI Helpers:**
+<!-- card -->
+### AI Helpers
+![User research](assets/images/game-ideation-2.jpg)
+<!-- step: +1 -->
 * Feed moodboards into AI; generate draft art, animation, music
-
-**Human Refinement:**
+<!-- card -->
+### Human Refinement
+![User research](assets/images/game-ideation-3.jpg)
+<!-- step: +1 -->
 * Share with team and players; reprompt AI for variations
 * Create final moodboards
 
 ---
-
+<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # Production
-
-**Human Tasks:**
-* **Game Design:** Core loop, mechanics, rules, story
-* **Art & Sound:** Define characters and assets required
-* **Development:** Choose engine, architecture, logic, physics, game AI
-
-**AI Helpers:**
+<!-- card -->
+### Human Tasks
+![User research](assets/images/game-prod-1.jpg)
+<!-- step: +1 -->
+* **Game Design** Core loop, mechanics, rules, story
+* **Art & Sound** Art style, colour pallate, lighting, sound, music 
+* **Development** Choose engine, architecture, logic, physics, game AI
+<!-- card -->
+### AI Helpers
+![User research](assets/images/game-prod-2.jpg)
+<!-- step: +1 -->
 * Create assets, program game logic, write game code
-
-**Human Refinement:**
+<!-- card -->
+### Human Refinement
+![User research](assets/images/game-prod-3.jpg)
+<!-- step: +1 -->
 * Refine AI assets; test UX and player flow; iterate with AI
 
 ---
-
-# Human + AI = Human Made Games
-
-* Like human chef-cooked noodles—has the taste of human touch
-* Let AI handle what you struggled with
-* You focus on fun, player experience, and the soul of the game
+<!-- type: hero-image -->
+<!-- align: center-center -->
+# Focus on fun, player experience, and the game's soul.
+## Let AI cook the soup.
+![Game soup](assets/images/game-soup.png){ratio: 3:2}
