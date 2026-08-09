@@ -1,7 +1,11 @@
+// lib/utils/card_node_parser.dart
 import 'package:design_gyan/models/progressive_grid_models.dart';
 
 class CardParseResult {
   final String title;
+  final String? subheader;
+  final String? signOff; 
+  final String? footer;  
   final List<CardPointNode> cards;
   final int maxSteps;
   final double aspectRatio;
@@ -9,21 +13,27 @@ class CardParseResult {
 
   const CardParseResult({
     required this.title,
+    this.subheader,
+    this.signOff,
+    this.footer,
     required this.cards,
     required this.maxSteps,
     required this.aspectRatio,
     this.cardWidth,
   });
 }
+
 class CardNodeParser {
   const CardNodeParser();
 
   CardParseResult parseLines(List<String> lines, double fallbackAspectRatio) {
     String title = '';
+    String? subheader;
+    String? signOff;
+    String? footer;
     final List<_RawCardData> rawCards = [];
     _RawCardData? currentRawCard;
     int currentRelativeLevel = 0;
-
     double slideAspectRatio = fallbackAspectRatio;
     String? cardWidth;
 
@@ -31,13 +41,38 @@ class CardNodeParser {
       final trimmed = line.trim();
       if (trimmed.isEmpty) continue;
 
+      // 1. Extract Sign-off (Check ALWAYS, even inside card context)
+      if (trimmed.startsWith('<!-- sign-off:') || trimmed.startsWith('Sign-off:')) {
+        signOff = trimmed
+            .replaceAll(RegExp(r'^(Sign-off:\s*|<!--\s*sign-off:\s*)'), '')
+            .replaceAll('-->', '')
+            .trim();
+        continue;
+      }
+
+      // 2. Extract Footers (Check ALWAYS, even inside card context)
+      if (trimmed.startsWith('## [source:') || trimmed.startsWith('Footer:') || trimmed.startsWith('<!-- footer:')) {
+        footer = trimmed
+            .replaceAll(RegExp(r'^(##\s*|Footer:\s*|<!--\s*footer:\s*)'), '')
+            .replaceAll('-->', '')
+            .trim();
+        continue;
+      }
+
+      // 3. Extract Main Title
       if (trimmed.startsWith('# ')) {
         title = trimmed.replaceFirst('# ', '').trim();
         continue;
       }
 
+      // 4. Extract Top-Level Subheader (before cards start)
+      if (trimmed.startsWith('## ') && currentRawCard == null) {
+        subheader = trimmed.replaceFirst('## ', '').trim();
+        continue;
+      }
+
+      // 5. Directives
       if (trimmed.startsWith('<!--')) {
-        // 1. Extract aspect ratio (e.g. aspect-ratio: 1:1)
         final arMatch = RegExp(r'aspect-ratio:\s*([0-9\.:]+)').firstMatch(trimmed);
         if (arMatch != null) {
           final val = arMatch.group(1)!;
@@ -53,54 +88,41 @@ class CardNodeParser {
           }
         }
 
-        // 2. Extract card width (e.g. card-width: 25%)
         final widthMatch = RegExp(r'card-width:\s*([^-\s>]+)').firstMatch(trimmed);
         if (widthMatch != null) {
           cardWidth = widthMatch.group(1)!.trim();
         }
 
-        // 3. Extract step tags (<!-- step: +1 --> or <!-- step: 1 -->)
         final relMatch = RegExp(r'step:\s*\+(\d+)').firstMatch(trimmed);
         final absMatch = RegExp(r'step:\s*(\d+)').firstMatch(trimmed);
-
         if (relMatch != null) {
           currentRelativeLevel = int.parse(relMatch.group(1)!);
         } else if (absMatch != null) {
           currentRelativeLevel = int.parse(absMatch.group(1)!);
         }
 
-        // 4. Card boundary marker (<!-- card -->)
         final cardDirective = RegExp(r'<!--\s*card(?::\d+)?\s*-->').firstMatch(trimmed);
         if (cardDirective != null) {
           if (currentRawCard != null) {
             rawCards.add(currentRawCard);
           }
-          currentRelativeLevel = 0; // Reset relative step counter for new card
+          currentRelativeLevel = 0;
           currentRawCard = _RawCardData(subPoints: []);
         }
-
-        // Pass-through: ignore inline/mode directives without dropping execution context
         continue;
       }
 
+      // Guard: Ignore card-specific parsing if no card block active
       if (currentRawCard == null) continue;
 
-      if (trimmed.startsWith('### ')) {
-        currentRawCard.title = trimmed.replaceFirst('### ', '').trim();
+      // 6. Card Specific Titles / Headers
+      if (trimmed.startsWith('### ') || trimmed.startsWith('## ')) {
+        currentRawCard.title = trimmed.replaceFirst(RegExp(r'^###?\s*'), '').trim();
         continue;
       }
 
-      // Card main image (appears before any step markers)
-      if (trimmed.startsWith('![') && currentRawCard.subPoints.isEmpty && currentRelativeLevel == 0) {
-        final imgMatch = RegExp(r'!\[.*?\]\((.*?)\)').firstMatch(trimmed);
-        if (imgMatch != null) {
-          currentRawCard.imageUrl = imgMatch.group(1);
-        }
-        continue;
-      }
-
-      // Handles step items: bullet points (*, -) OR standalone image tags (![...])
-      if (trimmed.startsWith('![') || trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+      // 7. Text-only bullet items / Sub-points inside card
+      if (trimmed.startsWith('![') || trimmed.startsWith('* ') || trimmed.startsWith('- ') || !trimmed.startsWith('#')) {
         String? subImgUrl;
         String? cleanText;
 
@@ -113,13 +135,15 @@ class CardNodeParser {
           cleanText = trimmed.replaceFirst(RegExp(r'^[\*\-]\s*'), '').trim();
         }
 
-        currentRawCard.subPoints.add(
-          _RawSubPoint(
-            text: (cleanText != null && cleanText.isNotEmpty) ? cleanText : null,
-            imageUrl: subImgUrl,
-            relativeLevel: currentRelativeLevel,
-          ),
-        );
+        if (cleanText.isNotEmpty || subImgUrl != null) {
+          currentRawCard.subPoints.add(
+            _RawSubPoint(
+              text: cleanText.isNotEmpty ? cleanText : null,
+              imageUrl: subImgUrl,
+              relativeLevel: currentRelativeLevel,
+            ),
+          );
+        }
       }
     }
 
@@ -129,21 +153,16 @@ class CardNodeParser {
 
     final int totalCards = rawCards.length;
     int maxCalculatedStep = totalCards > 0 ? totalCards : 1;
-
-    // Pass 2: Round-robin relative step mapping
     final List<CardPointNode> finalCards = [];
 
     for (int cIndex = 0; cIndex < totalCards; cIndex++) {
       final raw = rawCards[cIndex];
       final int cardIndexNumber = cIndex + 1;
-
       final List<SubPointData> finalSubPoints = raw.subPoints.map((sp) {
         final int calculatedGlobalStep = cardIndexNumber + (sp.relativeLevel * totalCards);
-
         if (calculatedGlobalStep > maxCalculatedStep) {
           maxCalculatedStep = calculatedGlobalStep;
         }
-
         return SubPointData(
           text: sp.text,
           imageUrl: sp.imageUrl,
@@ -165,6 +184,9 @@ class CardNodeParser {
 
     return CardParseResult(
       title: title,
+      subheader: subheader,
+      signOff: signOff,
+      footer: footer,
       cards: finalCards,
       maxSteps: maxCalculatedStep,
       aspectRatio: slideAspectRatio,
@@ -177,7 +199,6 @@ class _RawCardData {
   String title;
   String? imageUrl;
   final List<_RawSubPoint> subPoints;
-
   _RawCardData({
     this.title = '',
     this.imageUrl,
@@ -189,7 +210,6 @@ class _RawSubPoint {
   final String? text;
   final String? imageUrl;
   final int relativeLevel;
-
   _RawSubPoint({
     this.text,
     this.imageUrl,

@@ -4,4 +4,4 @@ enum SlideType { standard, fullMedia, heroImage, grid , titleCard, progressiveGr
 enum MediaFit { cover, contain }
 enum GridDirection { column, row } 
 enum MediaPlacement { sideCard, inline }
-enum BlockRole { header, subheader, sectionHeader, callout, bullet }
+enum BlockRole { header, subheader, sectionHeader, callout, bullet, footer }

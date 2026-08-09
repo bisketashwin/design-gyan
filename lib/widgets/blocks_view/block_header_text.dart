@@ -19,10 +19,9 @@ class BlockHeaderText extends ConsumerWidget {
       child: Text(
         isTitle ? (block.text ?? '').toUpperCase() : (block.text ?? ''),
         style: TextStyle(
-          fontSize: baseUiSize * (isTitle ? 2.85 : 1.55) * viewport.textScale,
+          fontSize: baseUiSize * (isTitle ? 2.85 : 2) * viewport.textScale,
           fontWeight: isTitle ? FontWeight.w900 : null,
-          fontStyle: isTitle ? null : FontStyle.italic,
-          color: isTitle ? const Color(0xFFFFB800) : const Color(0xFF00F0FF),
+          color: isTitle ? const Color(0xFFFFB800) : const Color(0xFFE7E7E7),
           height: viewport.lineHeight,
           letterSpacing: (isTitle ? 1.5 * viewport.unifiedZoom : 0) + viewport.letterSpacing,
         ),

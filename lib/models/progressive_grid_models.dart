@@ -60,6 +60,9 @@ class CardPointNode {
 @immutable
 class ProgressiveGridData {
   final String title;
+  final String? subheader;
+  final String? signOff;
+  final String? footer;
   final int columns;
   final List<CardPointNode> cards;
   final double? cardWidthPercent;
@@ -67,6 +70,9 @@ class ProgressiveGridData {
 
   const ProgressiveGridData({
     required this.title,
+    this.subheader,
+    this.signOff,
+    this.footer,
     required this.columns,
     required this.cards,
     required this.maxSteps, 

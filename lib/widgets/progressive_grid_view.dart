@@ -1,3 +1,4 @@
+// lib/widgets/progressive_grid_view.dart
 import 'package:design_gyan/commons/helpers.dart';
 import 'package:design_gyan/models/progressive_grid_models.dart';
 import 'package:design_gyan/models/slide_data.dart';
@@ -20,6 +21,7 @@ class ProgressiveGridView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewport = ref.watch(viewportSettingsProvider);
+    final baseUiSize = viewport.getBaseUiSize(context);
     final gridData = slide.progressiveGridData;
 
     if (gridData == null) {
@@ -28,9 +30,10 @@ class ProgressiveGridView extends ConsumerWidget {
 
     final horizontalPadding = 80.0 * viewport.unifiedZoom;
     final verticalPadding = 50.0 * viewport.unifiedZoom;
-    final effectiveTitle = slide.title.trim().isNotEmpty 
-        ? slide.title 
+    final effectiveTitle = slide.title.trim().isNotEmpty
+        ? slide.title
         : (gridData.title.isNotEmpty ? gridData.title : 'UNTITLED');
+    final effectiveSubtitle = slide.subtitle ?? gridData.subheader;
 
     return Stack(
       children: [
@@ -43,24 +46,16 @@ class ProgressiveGridView extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Header
-              SlideHeader(
-                title: effectiveTitle,
-                subtitle: slide.subtitle,
-              ),  
+              SlideHeader(title: effectiveTitle, subtitle: effectiveSubtitle),
               SizedBox(height: 28 * viewport.unifiedZoom),
-
-              // 2. Main Content Area
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     final totalWidth = constraints.maxWidth;
                     final columns = gridData.columns.clamp(1, 12);
                     const double spacing = 16.0;
-
                     final double computedFallbackWidth =
                         (totalWidth - ((columns - 1) * spacing)) / columns;
-
                     final double cardWidth = gridData.cardWidthPercent != null
                         ? totalWidth * gridData.cardWidthPercent!
                         : computedFallbackWidth;
@@ -89,6 +84,29 @@ class ProgressiveGridView extends ConsumerWidget {
                   },
                 ),
               ),
+              if (gridData.signOff != null && gridData.signOff!.isNotEmpty) ...[
+                SizedBox(height: 20 * viewport.unifiedZoom),
+                Text(
+                  gridData.signOff!,
+                  style: TextStyle(
+                    fontSize: baseUiSize * 2 * viewport.textScale,
+                    color: const Color(0xFFE7E7E7),
+                    height: viewport.lineHeight,
+                    letterSpacing: viewport.letterSpacing,
+                  ),
+                ),
+              ],
+              if (gridData.footer != null && gridData.footer!.isNotEmpty) ...[
+                SizedBox(height: 12 * viewport.unifiedZoom),
+                Text(
+                  gridData.footer!,
+                  style: TextStyle(
+                    fontSize: baseUiSize * 1.1 * viewport.textScale,
+                    color: Colors.white38,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
               SizedBox(height: 80 * viewport.unifiedZoom),
             ],
           ),
@@ -146,8 +164,9 @@ class ProgressiveCardWidget extends ConsumerWidget {
               children: [
                 if (hasHeaderImage) ...[
                   ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(8 * viewport.unifiedZoom),
+                    borderRadius: BorderRadius.circular(
+                      8 * viewport.unifiedZoom,
+                    ),
                     child: AspectRatio(
                       aspectRatio: card.aspectRatio,
                       child: Image.asset(
@@ -203,10 +222,7 @@ class _SubPointItem extends ConsumerWidget {
   final SubPointData point;
   final bool isVisible;
 
-  const _SubPointItem({
-    required this.point,
-    required this.isVisible,
-  });
+  const _SubPointItem({required this.point, required this.isVisible});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -230,8 +246,9 @@ class _SubPointItem extends ConsumerWidget {
                   children: [
                     if (point.hasImage) ...[
                       ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(6 * viewport.unifiedZoom),
+                        borderRadius: BorderRadius.circular(
+                          6 * viewport.unifiedZoom,
+                        ),
                         child: AspectRatio(
                           aspectRatio: 16 / 9, // TODO: access ratio from media
                           child: Image.asset(

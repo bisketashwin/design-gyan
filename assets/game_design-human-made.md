@@ -59,7 +59,6 @@
 <!-- card -->
 ### Ways & Means
 ![Ways & Means](assets/images/game-aspect-powerups.jpg)
-    * Clear do's and don'ts
     * If there are special powers/obstacles, it should be clear how they work
 
 <!-- card -->
@@ -142,16 +141,24 @@
 
 ![Super Mario](https://www.youtube.com/watch?v=c-prVcCiVOg&t=67)
 ---
-<!-- type: standard-blocks -->
+<!-- type: progressive-grid:4 card-width: 20%-->
 # Do all players play all video games?
 
-### A Snake & Ladder-like game can fail in some contexts!
-* I don't believe in the chance of the dice.
-* I don't like surprises.
-* I don't rely on a game's social factor.
-* Can you think of more?
+## A Snake & Ladder-like game can fail in some contexts!
 
-### That's why all players don't play all games
+<!-- card -->
+### I don't believe in the chance of the dice.
+
+<!-- card -->
+### I don't like surprises.
+
+<!-- card -->
+### I don't rely on a game's social factor.
+
+<!-- card -->
+### Can you add more reasons?
+
+<!-- sign-off: That's why all players don't play all games -->
 ---
 <!-- type: cards-grid:column 5 -->
 # Game Genres

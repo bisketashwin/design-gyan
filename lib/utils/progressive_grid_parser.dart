@@ -1,3 +1,4 @@
+// lib/utils/progressive_grid_parser.dart
 import 'package:design_gyan/models/progressive_grid_models.dart';
 import 'package:design_gyan/utils/card_node_parser.dart';
 import 'package:design_gyan/utils/directive_parser.dart';
@@ -19,6 +20,9 @@ class ProgressiveGridParser {
 
     return ProgressiveGridData(
       title: cardResult.title,
+      subheader: cardResult.subheader,
+      signOff: cardResult.signOff, 
+      footer: cardResult.footer,
       columns: directives.columns,
       cardWidthPercent: directives.cardWidthPercent,
       cards: cardResult.cards,
