@@ -148,15 +148,19 @@
 
 <!-- card -->
 ### I don't believe in the chance of the dice.
+![](assets/images/no-chance.jpg)
 
 <!-- card -->
 ### I don't like surprises.
+![](assets/images/no-surprise.jpg)
 
 <!-- card -->
 ### I don't rely on a game's social factor.
+![](assets/images/no-social.jpg)
 
 <!-- card -->
 ### Can you add more reasons?
+![](assets/images/more.jpg)
 
 <!-- sign-off: That's why all players don't play all games -->
 ---
