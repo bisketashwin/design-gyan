@@ -23,6 +23,10 @@
 ### Snakes and Ladders
 * ![Snakes and Ladders](assets/images/snake_and_ladder_1.jpg)
 ---
+<!-- type: title-card -->
+# Why do you play games?
+## What do you play games for?
+---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 30%-->
 # Why do you play games?
 <!-- card -->
@@ -34,30 +38,42 @@
 <!-- card -->
 ### Fantasy fulfillment
 * ![Fantasy fulfillment](assets/images/play-to-fantasize.jpg) 
-
+---
+<!-- type: title-card -->
+# What is a game?
+## What factors define a game?
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 18%-->
-# What is a game?
+# Some factors in a game
 
 <!-- card -->
 ### Defined challenge 
 ![Defined challenge](assets/images/game-aspect-challange.jpg)
+    * Clear Start and clear End Goal
 
 <!-- card -->
 ### Rules & Limits
 ![Rules & Limits](assets/images/game-aspect-mechanic.jpg)
+    * No gray areas open for interpretation
 
 <!-- card -->
 ### Ways & Means
 ![Ways & Means](assets/images/game-aspect-powerups.jpg)
+    * Clear do's and don'ts
+    * If there are special powers/obstacles, it should be clear how they work
 
 <!-- card -->
 ### Progress & Mastery
 ![Progress & Mastery](assets/images/game-aspect-mastery.jpg)
+    * Win criteria are clear
+    * How to progress is clear
+    * Meaningful progress, achievements, and mastery
 
 <!-- card -->
 ### Social Recognition
 ![Social Recognition](assets/images/game-aspect-social.jpg)
+* Clear framework to compare players based on skill, hard work, teamwork, and mastery
+
 ---
 <!-- type: title-card -->
 # What is NOT a game?
@@ -177,19 +193,16 @@
 <!-- card -->
 ### Human Tasks
 ![User research](assets/images/game-pre-prod-1.jpg)
-<!-- step: +1 -->
 * Study game factors: strategy, fun, psychology, achievement
 * Study art, animation, VFX, sound/music to enhance factors
 * Study mechanics, rules, level design, storytelling, system design
 <!-- card -->
 ### AI Helpers
 ![User research](assets/images/game-pre-prod-2.jpg)
-<!-- step: +1 -->
 * Feed learnings into AI to get them formatted and crisped up
 <!-- card -->
 ### Human Refinement
 ![User research](assets/images/game-pre-prod-3.jpg)
-<!-- step: +1 -->
 * Filter/modify AI output to meet expectations
 * Create analysis presentations
 
@@ -199,17 +212,14 @@
 <!-- card -->
 ### Human Tasks
 ![User research](assets/images/game-ideation-1.jpg)
-<!-- step: +1 -->
 * Brainstorm art, animation, music inspirations; create moodboards
 <!-- card -->
 ### AI Helpers
 ![User research](assets/images/game-ideation-2.jpg)
-<!-- step: +1 -->
 * Feed moodboards into AI; generate draft art, animation, music
 <!-- card -->
 ### Human Refinement
 ![User research](assets/images/game-ideation-3.jpg)
-<!-- step: +1 -->
 * Share with team and players; reprompt AI for variations
 * Create final moodboards
 
@@ -219,19 +229,16 @@
 <!-- card -->
 ### Human Tasks
 ![User research](assets/images/game-prod-1.jpg)
-<!-- step: +1 -->
 * **Game Design** Core loop, mechanics, rules, story, system design
 * **Art & Sound** Art style, colour palette, lighting, sound, music 
 * **Development** Choose engine, architecture, logic, physics, game AI
 <!-- card -->
 ### AI Helpers
 ![User research](assets/images/game-prod-2.jpg)
-<!-- step: +1 -->
 * Create assets, program game logic, write game code
 <!-- card -->
 ### Human Refinement
 ![User research](assets/images/game-prod-3.jpg)
-<!-- step: +1 -->
 * Refine AI assets; test UX and player flow; iterate with AI
 
 ---
