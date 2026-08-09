@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/slide_data.dart';
 import '../commons/values.dart';
 import 'presentation_state.dart';
+import 'package:flutter/foundation.dart';
+import 'package:web/web.dart' as web;
 
 
 final presentationProvider =
@@ -68,9 +70,19 @@ class PresentationNotifier extends AsyncNotifier<PresentationState> {
 
     _updateState((current) => current.copyWith(isFullscreen: newFullscreenState));
 
-    SystemChrome.setEnabledSystemUIMode(
-      newFullscreenState ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
-    );
+    if (kIsWeb) {
+      if (newFullscreenState) {
+        web.document.documentElement?.requestFullscreen();
+      } else {
+        if (web.document.fullscreenElement != null) {
+          web.document.exitFullscreen();
+        }
+      }
+    } else {
+      SystemChrome.setEnabledSystemUIMode(
+        newFullscreenState ? SystemUiMode.immersiveSticky : SystemUiMode.edgeToEdge,
+      );
+    }
   }
 
   void nextStep() {

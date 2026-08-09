@@ -1,26 +1,43 @@
 <!-- type: title-card -->
-# Games.
-## What comes to head?
+# Games
+## What comes to mind?
 ---
-<!-- type: cards-grid:column 3 -->
-# Games. What comes to head?
-* Gillidanda, (assets/images/gilli_danda_1.jpg)
-* vattappa, (assets/images/vattappa_1.webp)
-* kabaddi, (assets/images/kabaddi_1.jpg)
-* Langadi (hopscotch) (assets/images/hopscotch_2.jpg)
-* hide and seek (assets/images/hide_and_seek_1.jpg)
-* snake and ladder (assets/images/snake_and_ladder_1.jpg)
-
+<!-- type: progressive-grid:3 aspect-ratio: 3:2 card-width: 25%-->
+# Games Examples
+<!-- card -->
+### Gilli Danda
+* ![Gilli Danda](assets/images/gilli_danda_1.jpg)
+<!-- card -->
+### Lagori
+* ![Lagori](assets/images/lagori_1.jpg)
+<!-- card -->
+### Kabaddi
+* ![Kabaddi](assets/images/kabaddi_1.jpg)
+<!-- card -->
+### Langadi (hopscotch)
+* ![Langadi](assets/images/langadi_1.jpg)
+<!-- card -->
+### Hide and seek
+* ![Hide and seek](assets/images/hide_and_seek_1.jpg)
+<!-- card -->
+### Snakes and Ladders
+* ![Snakes and Ladders](assets/images/snake_and_ladder_1.jpg)
 ---
-<!-- type: title-card -->
+<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 30%-->
 # Why do you play games?
+<!-- card -->
+### Stress relief
 * ![Stress relief](assets/images/play-to-relax.jpg)
+<!-- card -->
+### Connect with Friends
 * ![Connect with Friends](assets/images/play-to-connect.jpg)
+<!-- card -->
+### Fantasy fulfillment
 * ![Fantasy fulfillment](assets/images/play-to-fantasize.jpg) 
 
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 18%-->
-# How a game works: Snake & Ladder
+# What is a game?
 
 <!-- card -->
 ### Defined challenge 
@@ -62,39 +79,36 @@
 ### Ways & Means
 ![Ways & Means](assets/images/game-aspect-powerups.jpg)
     * Bottom of ladder takes you to top
-    * Land on other's pawn = sends them back to start
+    * Land on another's pawn = sends them back to start
 <!-- card -->
 ### Progress & Mastery
 ![Progress & Mastery](assets/images/game-aspect-mastery.jpg)
     * Keep retrying to reach 100
-    * Study others statergies & adopt
+    * Study others' strategies & adopt
 
 <!-- card -->
 ### Social Recognition
 ![Social Recognition](assets/images/game-aspect-social.jpg)
     * You are 1st/2nd/3rd of the four players
-    * You partner with other to defeat remaining
+    * You partner with others to defeat the rest
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # Latent psychology in real life
 <!-- card -->
- ### Chance factor
+ ### Chance Factor
  ![Chance factor](assets/images/reallife-secnario-1.jpg)
-<!-- step: +1 -->
-    * **In Game:** Variable outcome (rolling dice)
-    * **Real Life:** Finding job that pays for food vs. going hungry
+    * **In Game:** Rolling dice get 1 or 6 + one more chance
+    * **Real Life:** Scratch a card and get ₹100 or ₹1,000 + another scratch card
 <!-- card -->
 ### Surprises
- ![Chance factor](assets/images/reallife-secnario-2.jpg)
-<!-- step: +1 -->
-    * **In Game:** Snake bite vs. ladder climb
-    * **Real Life:** Getting killed by Corona vs. Becoming body builder
+ ![Surprises](assets/images/reallife-secnario-2.jpg)
+    * **In Game:** Snake bite vs ladder climb
+    * **Real Life:** Spraining an ankle in the final match Vs Scoring the winning goal
 <!-- card -->
-### Social factor
- ![Chance factor](assets/images/reallife-secnario-3.jpg)
-<!-- step: +1 -->
-    * **In Game:** Play together. Defeat other.
-    * **Real Life:** Gang up steal mangoes. Be the richest person.
+### Social Factor
+ ![Social Factor](assets/images/reallife-secnario-3.jpg)
+    * **In Game:** Play together Vs Defeat others.
+    * **Real Life:** Teaming up with friends to grab mangoes vs. Jumping alone to pluck one for yourself
 ---
 <!-- type: title-card -->
 # Can we take this essence to build a modern game?
@@ -113,40 +127,48 @@
 ![Super Mario](https://www.youtube.com/watch?v=c-prVcCiVOg&t=67)
 ---
 <!-- type: standard-blocks -->
-# Why it fails in some contexts
+# Do all players play all video games?
 
-* I dont relate to
-* I dont beliving chance of dice.
-* I dont like surprises.
-* I dont rely on games social factor.
+### A Snake & Ladder-like game can fail in some contexts!
+* I don't believe in the chance of the dice.
+* I don't like surprises.
+* I don't rely on a game's social factor.
+* Can you think of more?
 
-## Thats why all plers dont play all games
+### That's why all players don't play all games
 ---
 <!-- type: cards-grid:column 5 -->
-# Game genres
+# Game Genres
 * Action, (assets/images/game-icons/action.png)
-* board-fantacy, (assets/images/game-icons/board-fantacy.png)
-* board-realword-system, (assets/images/game-icons/board-realword-system.png)
+* board fantasy, (assets/images/game-icons/board-fantacy.png)
+* board real-world system, (assets/images/game-icons/board-realword-system.png)
 * card, (assets/images/game-icons/card.png)
 * casino, (assets/images/game-icons/casino.png)
 * educational, (assets/images/game-icons/educational.png)
 * farm, (assets/images/game-icons/farm.png)
 * kids, (assets/images/game-icons/kids.png)
 * mmorpg, (assets/images/game-icons/mmorpg.png)
-* open-world, (assets/images/game-icons/open-world.png)
+* open world, (assets/images/game-icons/open-world.png)
 * quiz, (assets/images/game-icons/quiz.png)
 * racing, (assets/images/game-icons/racing.png)
 * slot, (assets/images/game-icons/slot.png)
 * sports, (assets/images/game-icons/sports.png)
-* statergy, (assets/images/game-icons/statergy.png)
+* strategy, (assets/images/game-icons/statergy.png)
 
 ---
-<!-- type: standard-blocks -->
+<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # AI in game design: 3-tier approach
+<!-- card -->
+### Human Tasks
+![User research](assets/images/game-pre-prod-1.jpg)
 
-* **Human Tasks**
-* **AI Tasks**
-* **Human Refinement**
+<!-- card -->
+### AI Helpers
+![User research](assets/images/game-pre-prod-2.jpg)
+
+<!-- card -->
+### Human Refinement
+![User research](assets/images/game-pre-prod-3.jpg)
 
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
@@ -158,7 +180,7 @@
 <!-- step: +1 -->
 * Study game factors: strategy, fun, psychology, achievement
 * Study art, animation, VFX, sound/music to enhance factors
-* Study mechanics, rules, level design, storytelling
+* Study mechanics, rules, level design, storytelling, system design
 <!-- card -->
 ### AI Helpers
 ![User research](assets/images/game-pre-prod-2.jpg)
@@ -198,8 +220,8 @@
 ### Human Tasks
 ![User research](assets/images/game-prod-1.jpg)
 <!-- step: +1 -->
-* **Game Design** Core loop, mechanics, rules, story
-* **Art & Sound** Art style, colour pallate, lighting, sound, music 
+* **Game Design** Core loop, mechanics, rules, story, system design
+* **Art & Sound** Art style, colour palette, lighting, sound, music 
 * **Development** Choose engine, architecture, logic, physics, game AI
 <!-- card -->
 ### AI Helpers
