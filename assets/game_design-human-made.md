@@ -113,18 +113,18 @@
 <!-- card -->
  ### Chance Factor
  ![Chance factor](assets/images/reallife-secnario-1.jpg)
-    * **In Game:** Rolling dice get 1 or 6 + one more chance
+    * **In Game:** Rolling dice gets 1 or 6 + one more chance
     * **Real Life:** Scratch a card and get ₹100 or ₹1,000 + another scratch card
 <!-- card -->
 ### Surprises
  ![Surprises](assets/images/reallife-secnario-2.jpg)
-    * **In Game:** Snake bite vs ladder climb
-    * **Real Life:** Spraining an ankle in the final match Vs Scoring the winning goal
+    * **In Game:** Snake bite or ladder climb
+    * **Real Life:** Spraining an ankle in the final match or scoring the winning goal
 <!-- card -->
 ### Social Factor
  ![Social Factor](assets/images/reallife-secnario-3.jpg)
-    * **In Game:** Play together Vs Defeat others.
-    * **Real Life:** Teaming up with friends to grab mangoes vs. Jumping alone to pluck one for yourself
+    * **In Game:** Play together or defeat others.
+    * **Real Life:** Teaming up with friends to grab mangoes or jumping alone to pluck one for yourself
 ---
 <!-- type: title-card -->
 # Can we take this essence to build a modern game?
@@ -176,15 +176,15 @@
 # AI in game design: 3-tier approach
 <!-- card -->
 ### Human Tasks
-![User research](assets/images/game-pre-prod-1.jpg)
+![Human Tasks](assets/images/game-pre-prod-1.jpg)
 
 <!-- card -->
 ### AI Helpers
-![User research](assets/images/game-pre-prod-2.jpg)
+![AI Helpers](assets/images/game-pre-prod-2.jpg)
 
 <!-- card -->
 ### Human Refinement
-![User research](assets/images/game-pre-prod-3.jpg)
+![Human Refinement](assets/images/game-pre-prod-3.jpg)
 
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
@@ -192,17 +192,17 @@
 # Preproduction
 <!-- card -->
 ### Human Tasks
-![User research](assets/images/game-pre-prod-1.jpg)
+![Human Tasks](assets/images/game-pre-prod-1.jpg)
 * Study game factors: strategy, fun, psychology, achievement
 * Study art, animation, VFX, sound/music to enhance factors
 * Study mechanics, rules, level design, storytelling, system design
 <!-- card -->
 ### AI Helpers
-![User research](assets/images/game-pre-prod-2.jpg)
+![AI Helpers](assets/images/game-pre-prod-2.jpg)
 * Feed learnings into AI to get them formatted and crisped up
 <!-- card -->
 ### Human Refinement
-![User research](assets/images/game-pre-prod-3.jpg)
+![Human Refinement](assets/images/game-pre-prod-3.jpg)
 * Filter/modify AI output to meet expectations
 * Create analysis presentations
 
@@ -211,15 +211,15 @@
 # Ideation
 <!-- card -->
 ### Human Tasks
-![User research](assets/images/game-ideation-1.jpg)
+![Human Tasks](assets/images/game-ideation-1.jpg)
 * Brainstorm art, animation, music inspirations; create moodboards
 <!-- card -->
 ### AI Helpers
-![User research](assets/images/game-ideation-2.jpg)
+![AI Helpers](assets/images/game-ideation-2.jpg)
 * Feed moodboards into AI; generate draft art, animation, music
 <!-- card -->
 ### Human Refinement
-![User research](assets/images/game-ideation-3.jpg)
+![Human Refinement](assets/images/game-ideation-3.jpg)
 * Share with team and players; reprompt AI for variations
 * Create final moodboards
 
@@ -228,18 +228,22 @@
 # Production
 <!-- card -->
 ### Human Tasks
-![User research](assets/images/game-prod-1.jpg)
+![Human Tasks](assets/images/game-prod-1.jpg)
 * **Game Design** Core loop, mechanics, rules, story, system design
 * **Art & Sound** Art style, colour palette, lighting, sound, music 
 * **Development** Choose engine, architecture, logic, physics, game AI
 <!-- card -->
 ### AI Helpers
-![User research](assets/images/game-prod-2.jpg)
-* Create assets, program game logic, write game code
+![AI Helpers](assets/images/game-prod-2.jpg)
+* Create assets, game flows, game systems, game levels
+* Program game logic, system
+* Write game code
 <!-- card -->
 ### Human Refinement
-![User research](assets/images/game-prod-3.jpg)
-* Refine AI assets; test UX and player flow; iterate with AI
+![Human Refinement](assets/images/game-prod-3.jpg)
+* Refine AI assets, flows, levels, systems
+* Test UX and player flow
+* Iterate with AI
 
 ---
 <!-- type: hero-image -->
