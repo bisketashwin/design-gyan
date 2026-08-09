@@ -19,28 +19,15 @@
 * ![Fantasy fulfillment](assets/images/play-to-fantasize.jpg) 
 
 ---
-<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 18%-->
-# How a game works: Snake & Ladder
+<!-- type: standard-blocks -->
+# What is a game?
+![Wide Game Diagram](assets/images/aspects-of-game.jpg){ratio: 3:1 height:20%}
+* Defined challenge
+* Rules & limitations
+* Allowed ways & means
+* Progress & mastery
+* Social recognition
 
-<!-- card -->
-### Defined challenge 
-![Defined challenge](assets/images/game-aspect-challange.jpg)
-
-<!-- card -->
-### Rules & Limits
-![Rules & Limits](assets/images/game-aspect-mechanic.jpg)
-
-<!-- card -->
-### Ways & Means
-![Ways & Means](assets/images/game-aspect-powerups.jpg)
-
-<!-- card -->
-### Progress & Mastery
-![Progress & Mastery](assets/images/game-aspect-mastery.jpg)
-
-<!-- card -->
-### Social Recognition
-![Social Recognition](assets/images/game-aspect-social.jpg)
 ---
 <!-- type: title-card -->
 # What is NOT a game?
@@ -74,6 +61,29 @@
 ![Social Recognition](assets/images/game-aspect-social.jpg)
     * You are 1st/2nd/3rd of the four players
     * You partner with other to defeat remaining
+
+---
+<!-- type: standard-blocks -->
+<!-- floating-media: align=middle-right ratio=1:2.5 -->
+![Snake and Ladder](assets/images/snake-ladder.jpg)
+# How a game works: Snake & Ladder
+
+1. **Defined challenge** 
+    * Be the first to reach 100
+2. **Rules & Limits** 
+    * Dice number = only allowed move
+    * Snake mouth sends you to tail
+3. **Ways & Means** 
+    * Bottom of ladder takes you to top
+    * Land on other's pawn = sends them back to start
+4. **Progress & Mastery** 
+    * Keep retrying to reach 100
+    * Study others statergies & adopt
+5. **Social Recognition** 
+    * You are 1st/2nd/3rd of the four players
+    * You partner with other to defeat remaining
+
+
 ---
 <!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 25%-->
 # Latent psychology in real life
