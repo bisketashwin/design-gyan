@@ -27,7 +27,7 @@
 # Why do you play games?
 ## What do you play games for?
 ---
-<!-- type: progressive-grid:3 aspect-ratio: 1:1 card-width: 30%-->
+<!-- type: progressive-grid:4 aspect-ratio: 1:1 card-width: 23%-->
 # Why do you play games?
 <!-- card -->
 ### Stress relief
@@ -38,6 +38,9 @@
 <!-- card -->
 ### Fantasy fulfillment
 * ![Fantasy fulfillment](assets/images/play-to-fantasize.jpg) 
+<!-- card -->
+### Can you add more reasons?
+* ![More reasons](assets/images/more.jpg)
 ---
 <!-- type: title-card -->
 # What is a game?
@@ -259,6 +262,6 @@
 ---
 <!-- type: hero-image -->
 <!-- align: center-center -->
-# Focus on fun, player experience, and the game's soul.
-## Let AI cook the soup.
+# A game is a magic potion of story, logic, and emotion.
+## Brew yours faster with AI.
 ![Game soup](assets/images/game-soup.png){ratio: 3:2}
